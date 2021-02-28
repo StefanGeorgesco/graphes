@@ -329,6 +329,33 @@ class GrapheOriente:
             graphe = graphe.sous_graphe(graphe.getSommets() - {sommet})
         return num
 
+    def bellman(self, r):
+        if r not in self._sommets:
+            raise Exception("'sommet' doit être un sommet du graphe")
+        num = self.numerotation_topolgique()
+        if num[r] != 1:
+            raise Exception("'sommet' n'est pas racine du graphe")
+        A = {r}
+        pi = {r:0}
+        pere = {}
+        p = self.getP()
+        for sommet in self._sommets:
+            if sommet != r:
+                pi[sommet] = float('inf')
+        for j in range(2, self.ordre() + 1):
+            y = list(num.keys())[list(num.values()).index(j)]
+            pi[y] = min([pi[x] + p[(x,y)] for x in A if x in self.predecesseurs(y)])
+            l = list(
+                    filter(
+                        lambda x: (x,y) in p and pi[y] == pi[x] + p[(x,y)],
+                        list(A)
+                )
+            )
+            x0 = l[0]
+            pere[y] = x0
+            A.add(y)
+        return pere
+
     def floyd_warshall(self):
         n = len(self._sommets)
         M = {}
