@@ -34,6 +34,12 @@ class GrapheNonOriente:
     def __repr__(self):
         return f"GrapheNonOrienté {self._nom} ({self._sommets}, {self._aretes})"
 
+    def lier(self, sommet1, sommet2):
+        if sommet1 not in self._sommets or sommet2 not in self._sommets:
+            raise Exception("les sommets doivent appartenir au graphe")
+        if {sommet1,sommet2} not in self._aretes:
+            self._aretes.append({sommet1,sommet2})
+
     def getSommets(self):
         return set(self._sommets)
 
@@ -46,11 +52,29 @@ class GrapheNonOriente:
     def getCommentaire(self):
         return self._commentaire
 
+    def setNom(self, nom):
+        if not isinstance(nom, str):
+            raise Exception("'nom' doit être de type 'str'")
+        self._nom = nom
+
+    def setCommentaire(self, commentaire):
+        if not isinstance(commentaire, str):
+            raise Exception("'commentaire' doit être de type 'str'")
+        self._commentaire = commentaire
+
     def ordre(self):
         return len(self._sommets)
 
     def taille(self):
         return len(self._aretes)
+
+    def copie(self):
+        return GrapheNonOriente(
+            *self.getSommets(),
+            aretes=self.getAretes(),
+            nom=self.getNom(),
+            commentaire=self.getCommentaire()
+        )
 
     def sous_graphe(self, sommets):
         for sommet in sommets:
@@ -88,12 +112,6 @@ class GrapheNonOriente:
         ):
             raise Exception("Les arêtes doivent appartenir au graphe")
         return GrapheNonOriente(*list(self._sommets), aretes=aretesUniques)
-
-    def lier(self, sommet1, sommet2):
-        if sommet1 not in self._sommets or sommet2 not in self._sommets:
-            raise Exception("les sommets doivent appartenir au graphe")
-        if {sommet1,sommet2} not in self._aretes:
-            self._aretes.append({sommet1,sommet2})
 
     def clique(n):
         if not isinstance(n, int) or n < 1:
@@ -150,6 +168,11 @@ class GrapheOriente:
     def __repr__(self):
         return f"GrapheOrienté {self._nom} ({self._sommets}, {self._p})"
 
+    def lier(self, sommet1, sommet2, poids):
+        if sommet1 not in self._sommets or sommet2 not in self._sommets:
+            raise Exception("les sommets doivent appartenir au graphe")
+        self._p[(sommet1,sommet2)] = poids
+
     def getSommets(self):
         return set(self._sommets)
 
@@ -162,6 +185,16 @@ class GrapheOriente:
     def getCommentaire(self):
         return self._commentaire
 
+    def setNom(self, nom):
+        if not isinstance(nom, str):
+            raise Exception("'nom' doit être de type 'str'")
+        self._nom = nom
+
+    def setCommentaire(self, commentaire):
+        if not isinstance(commentaire, str):
+            raise Exception("'commentaire' doit être de type 'str'")
+        self._commentaire = commentaire
+
     def arcs(self):
         return set(self._p.keys())
 
@@ -170,6 +203,14 @@ class GrapheOriente:
 
     def taille(self):
         return len(self.arcs())
+
+    def copie(self):
+        return GrapheOriente(
+            *self.getSommets(),
+            p=self.getP(),
+            nom=self.getNom(),
+            commentaire=self.getCommentaire()
+        )
 
     def sous_graphe(self, sommets):
         for sommet in sommets:
@@ -204,11 +245,6 @@ class GrapheOriente:
         for arc in arcs:
             p.update({tuple(arc): self._p[arc]})
         return GrapheOriente(*list(self._sommets), p=p)
-
-    def lier(self, sommet1, sommet2, poids):
-        if sommet1 not in self._sommets or sommet2 not in self._sommets:
-            raise Exception("les sommets doivent appartenir au graphe")
-        self._p[(sommet1,sommet2)] = poids
 
     def successeurs(self, sommet):
         if sommet not in self._sommets:

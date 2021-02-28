@@ -45,6 +45,30 @@ class TestStringMethods(unittest.TestCase):
         self.assertFalse({A, D} in aretes)
         self.assertFalse({A, E} in aretes)
 
+    def test_copie_graphe_non_oriente(self):
+        graphe, sommets = self.get_graphes_non_orientes("Exemple de graphe non orienté")
+        A, B, C, D, E, F = sommets
+        graphe.setNom("nom")
+        graphe_copie = graphe.copie()
+        self.assertEqual("nom", graphe_copie.getNom())
+        self.assertEqual("Exemple de graphe non orienté", graphe_copie.getCommentaire())
+        self.assertEqual(set(sommets), graphe_copie.getSommets())
+        aretes = graphe_copie.getAretes()
+        self.assertEqual(len(aretes), 8)
+        self.assertTrue({A, B} in aretes)
+        self.assertTrue({A, C} in aretes)
+        self.assertTrue({A, F} in aretes)
+        self.assertTrue({B, E} in aretes)
+        self.assertTrue({C, E} in aretes)
+        self.assertTrue({C, D} in aretes)
+        self.assertTrue({D, E} in aretes)
+        self.assertTrue({D, F} in aretes)
+        self.assertFalse({E,F} in aretes)
+        self.assertFalse({B,D} in aretes)
+        self.assertFalse({B,C} in aretes)
+        self.assertFalse({A, D} in aretes)
+        self.assertFalse({A, E} in aretes)
+
     def test_sous_graphe_graphe_non_oriente(self):
         graphe, sommets = self.get_graphes_non_orientes("Exemple de graphe non orienté")
         A, B, C, D, E, F = sommets
@@ -218,6 +242,30 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(3, len(chemin))
         self.assertEqual([(B,C), (C,F), (F,D)], chemin)
         self.assertEqual(-4, longueur)
+
+    def test_copie_graphe_oriente(self):
+        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        A, B, C, D, E, F = sommets
+        graphe.setNom("nom")
+        graphe_copie = graphe.copie()
+        self.assertEqual("nom", graphe_copie.getNom())
+        self.assertEqual("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92", graphe_copie.getCommentaire())
+        self.assertEqual(set(sommets), graphe_copie.getSommets())
+        arcs = graphe_copie.arcs()
+        self.assertEqual(len(arcs), 10)
+        self.assertTrue((F, D) in arcs)
+        self.assertTrue((D, B) in arcs)
+        self.assertTrue((A, E) in arcs)
+        self.assertTrue((C, F) in arcs)
+        self.assertTrue((D, C) in arcs)
+        self.assertFalse((D, F) in arcs)
+        self.assertFalse((B, D) in arcs)
+        self.assertFalse((E, A) in arcs)
+        self.assertFalse((F, C) in arcs)
+        self.assertFalse((C, D) in arcs)
+        self.assertFalse((C, E) in arcs)
+        self.assertFalse((B, F) in arcs)
+        self.assertFalse((D, A) in arcs)
 
     def test_sous_graphe_graphe_oriente(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
