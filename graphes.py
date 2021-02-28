@@ -314,6 +314,21 @@ class GrapheOriente:
     def estFortementConnexe(self):
         return len(self.cfcs()) == 1
 
+    def numerotation_topolgique(self):
+        num = {}
+        graphe = self.copie()
+        for i in range(1, self.ordre() + 1):
+            sommet = None
+            for s in graphe.getSommets():
+                if len(graphe.predecesseurs(s)) == 0:
+                    sommet = s
+                    break
+            if sommet is None:
+                raise Exception("Ce graphe comporte un circuit")
+            num[sommet] = i
+            graphe = graphe.sous_graphe(graphe.getSommets() - {sommet})
+        return num
+
     def floyd_warshall(self):
         n = len(self._sommets)
         M = {}
