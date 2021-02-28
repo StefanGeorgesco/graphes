@@ -314,6 +314,40 @@ class GrapheOriente:
     def estFortementConnexe(self):
         return len(self.cfcs()) == 1
 
+    def dijkstra(self, r):
+        if r not in self._sommets:
+            raise Exception("'sommet' doit être un sommet du graphe")
+        if any(
+            map(
+                lambda x: x < 0,
+                self._p.values()
+            )
+        ):
+            raise Exception("Les valuations du graphe ne sont pas toutes positives")
+        A = {r}
+        pivot = r
+        pi = {r:0}
+        pere = {}
+        p = self._p
+        sommets = self._sommets
+        for x in sommets:
+            if x != r:
+                pi[x] = float('inf')
+        for j in range(1, self.ordre()):
+            for y in (sommets - A).intersection(self.successeurs(pivot)):
+                if pi[pivot] + p[(pivot,y)] < pi[y]:
+                    pi[y] = pi[pivot] + p[(pivot,y)]
+                    pere[y] = pivot
+            mini = min([pi[z] for z in sommets - A])
+            pivot = list(
+                filter(
+                    lambda z: pi[z] == mini,
+                    sommets - A
+                )
+            )[0]
+            A.add(pivot)
+        return pere
+
     def numerotation_topolgique(self):
         num = {}
         graphe = self.copie()
