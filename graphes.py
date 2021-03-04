@@ -388,7 +388,7 @@ class GrapheOriente:
             x0 = l[0]
             pere[y] = x0
             A.add(y)
-        return pere
+        return pi, pere
 
     def floyd_warshall(self):
         n = len(self._sommets)

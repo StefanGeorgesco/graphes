@@ -297,13 +297,17 @@ class TestStringMethods(unittest.TestCase):
     def test_bellman(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85")
         S1, S2, S3, S4, S5, S6, S7, S8, S9 = sommets
-        pere = graphe.bellman(S1)
+        pi, pere = graphe.bellman(S1)
         def chemin(s1,s2):
             if s1 == s2:
                 return []
             return chemin(s1, pere[s2]) + [(pere[s2], s2)]
         self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S6), (S6, S9)], chemin(S1, S9))
         self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S8)], chemin(S1,S8))
+        self.assertEqual(1, pi[S9])
+        self.assertEqual(-2, pi[S8])
+        self.assertEqual(1, pi[S7])
+        self.assertEqual(0, pi[S6])
 
     def test_plus_court_chemin(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
