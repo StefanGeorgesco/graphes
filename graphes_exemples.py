@@ -222,6 +222,23 @@ donnees_graphes_orientes = [
             ("F-", "A-", 1)
         ],
         "sommet_départ": "B-"
+    },
+    {
+        "titre": "RCP101 - ED2 - Exercice 2",
+        "noms_sommets": ["x1", "x2", "x3", "x4", "x5", "x6"],
+        "liens": [
+            ("x1", "x2", 2),
+            ("x1", "x3", 6),
+            ("x1", "x4", 9),
+            ("x2", "x5", 1),
+            ("x3", "x2", 1),
+            ("x3", "x6", 6),
+            ("x4", "x3", 1),
+            ("x4", "x6", 1),
+            ("x5", "x3", 2),
+            ("x5", "x6", 9)
+        ],
+        "sommet_départ": "x1"
     }
 ]
 donnees_graphes_non_orientes = [

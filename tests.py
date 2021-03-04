@@ -276,13 +276,17 @@ class TestStringMethods(unittest.TestCase):
     def test_dijkstra(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74")
         S1, S2, S3, S4, S5, S6, S7, S8 = sommets
-        pere = graphe.dijkstra(S1)
+        pi, pere = graphe.dijkstra(S1)
         def chemin(s1,s2):
             if s1 == s2:
                 return []
             return chemin(s1, pere[s2]) + [(pere[s2], s2)]
         self.assertEqual([(S1, S3), (S3, S4), (S4, S2)], chemin(S1,S2))
         self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], chemin(S1,S8))
+        self.assertEqual(5, pi[S8])
+        self.assertEqual(4, pi[S7])
+        self.assertEqual(3, pi[S6])
+        self.assertEqual(6, pi[S2])
 
     def test_numerotation_topolgique_graphe_oriente(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85")

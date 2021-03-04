@@ -346,7 +346,7 @@ class GrapheOriente:
                 )
             )[0]
             A.add(pivot)
-        return pere
+        return pi, pere
 
     def numerotation_topolgique(self):
         num = {}
