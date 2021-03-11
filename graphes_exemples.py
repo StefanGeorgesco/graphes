@@ -102,7 +102,7 @@ donnees_graphes_orientes = [
             ("D", "C", 2),
             ("E", "D", -1),
             ("F", "D", 1),
-            ("F", "E", 3)
+            ("F", "E", 4)
         ],
         "sommet_départ": "A"
     },
