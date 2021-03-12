@@ -309,6 +309,17 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(1, pi[S7])
         self.assertEqual(0, pi[S6])
 
+    def test_ford(self):
+        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        A, B, C, D, E, F = sommets
+        pi, pere = graphe.ford(A)
+        def chemin(s1,s2):
+            if s1 == s2:
+                return []
+            return chemin(s1, pere[s2]) + [(pere[s2], s2)]
+        self.assertEqual([(A, B), (B, C), (C, F)], chemin(A, F))
+        self.assertEqual(-1, pi[F])
+
     def test_floyd_warshall(self):
         graphe, sommets = self.get_graphes_orientes("RCP101 - ED2 - Exercice 4")
         A, B, C, D, E = sommets

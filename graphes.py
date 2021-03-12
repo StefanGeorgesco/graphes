@@ -389,6 +389,47 @@ class GrapheOriente:
             A.add(y)
         return pi, pere
 
+    def ford(self, r):
+        if r not in self._sommets:
+            raise Exception("'sommet' doit être un sommet du graphe")
+        k = 0
+        pi = {0: {r: 0}}
+        pere = {}
+        p = self.getP()
+        n = self.ordre()
+        for sommet in self._sommets:
+            if sommet != r:
+                pi[0].update({sommet: float('inf')})
+        while True:
+            changement = False
+            k += 1
+            for sommet in self._sommets:
+                predecesseurs = self.predecesseurs(sommet)
+                if len(predecesseurs) > 0:
+                    mini = min(
+                        pi[k-1][sommet],
+                        min([pi[k-1][y] + p[y,sommet] for y in predecesseurs])
+                    )
+                else:
+                    mini = pi[k-1][sommet]
+                if k in pi.keys():
+                    pi[k].update({sommet: mini})
+                else:
+                    pi.update({k: {sommet: mini}})
+                if pi[k-1][sommet] != pi[k][sommet]:
+                    pere[sommet] = list(
+                        filter(
+                            lambda y: pi[k-1][y] + p[y,sommet] == mini,
+                            self.predecesseurs(sommet)
+                        )
+                    )[0]
+                    changement = True
+            if k == n or not changement:
+                break
+        if changement:
+            raise Exception(f"Il existe un circuit absorbant accessible depuis {r}")
+        return pi[k], pere
+
     def floyd_warshall(self):
         n = len(self._sommets)
         M = {}
@@ -396,7 +437,7 @@ class GrapheOriente:
         for x in self._sommets:
             for y in self._sommets:
                 M[x,y] = self._p[x,y] if x != y and (x,y) in self.arcs() \
-                    else min(0, self._p[x,y]) if x == y and (x,y) in self.arcs() \
+                    else min(0, self._p[(x,y)]) if x == y and (x,y) in self.arcs() \
                     else 0 if x == y and (x,y) not in self.arcs() \
                     else float('inf')
                 P[x,y] = x if x != y and (x,y) in self.arcs() else None
