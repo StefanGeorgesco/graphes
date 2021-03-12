@@ -49,9 +49,9 @@ if __name__ == '__main__':
 
         try:
             M,P = graphe.floyd_warshall()
-            print("\tmatrice M de Floyd-Warshall :")
+            print("\tMatrice M de Floyd-Warshall :")
             afficheMatrice(sommets, M)
-            print("\tmatrice P de Floyd-Warshall :")
+            print("\tMatrice P de Floyd-Warshall :")
             afficheMatrice(sommets, P)
         except Exception as e:
             print("\tIl y a un circuit absorbant. Fin de l'algorithme de Floyd-Warshall : " + repr(e))

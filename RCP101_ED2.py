@@ -34,6 +34,7 @@ def afficheMatrice(sommets, M):
 
 graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 1")
 print(graphe.getCommentaire())
+print()
 T1A0 = sommets[0]
 T6 = sommets[15]
 pi, pere = graphe.bellman(T1A0)
@@ -44,6 +45,7 @@ print()
 
 graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 2")
 print(graphe.getCommentaire())
+print()
 x1, x2, x3, x4, x5, x6 = sommets
 pi, pere = graphe.dijkstra(x1)
 print("pi :", pi)
@@ -52,6 +54,7 @@ print()
 
 graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 3 questions 1 et 2")
 print(graphe.getCommentaire())
+print()
 S1 = sommets[0]
 S10 = sommets[9]
 pi, pere = graphe.bellman(S1)
@@ -63,6 +66,7 @@ print()
 
 graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 3 question 3")
 print(graphe.getCommentaire())
+print()
 S1 = sommets[0]
 S10 = sommets[9]
 pi, pere = graphe.bellman(S1)
@@ -74,10 +78,12 @@ print()
 
 graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 4")
 print(graphe.getCommentaire())
+print()
 try:
     M, P = graphe.floyd_warshall()
+    print("\tMatrice M de Floyd-Warshall :")
     afficheMatrice(sommets, M)
-    print("\tmatrice P de Floyd-Warshall :")
+    print("\tMatrice P de Floyd-Warshall :")
     afficheMatrice(sommets, P)
     for s1, s2 in [(x, y) for x in sommets for y in sommets if x != y]:
         if M[s1, s2] == float('inf'):

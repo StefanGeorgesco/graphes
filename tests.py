@@ -309,6 +309,21 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(1, pi[S7])
         self.assertEqual(0, pi[S6])
 
+    def test_floyd_warshall(self):
+        graphe, sommets = self.get_graphes_orientes("RCP101 - ED2 - Exercice 4")
+        A, B, C, D, E = sommets
+        M, P = graphe.floyd_warshall()
+        self.assertEqual(5, M[A, B])
+        self.assertEqual(1, M[B, E])
+        self.assertEqual(-1, M[C, D])
+        self.assertEqual(0, M[B, C])
+        self.assertEqual(float('inf'), M[C, A])
+        self.assertEqual(C, P[A, B])
+        self.assertEqual(D, P[B, E])
+        self.assertEqual(C, P[C, D])
+        self.assertEqual(D, P[B, C])
+        self.assertEqual(None, P[C, A])
+
     def test_plus_court_chemin(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
         A, B, C, D, E, F = sommets
