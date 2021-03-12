@@ -33,9 +33,9 @@ if __name__ == '__main__':
         """
         Matrices M et P de Floyd-Warshall
         """
-        try:
-            M,P = graphe.floyd_warshall()
-            print("\tmatrice M de Floyd-Warshall :")
+
+        def afficheMatrice(sommets, M):
+            M = dict(M)
             print("\t" + "".ljust(5), end="")
             for j in sommets:
                 print(repr(j).ljust(5), end="")
@@ -46,20 +46,15 @@ if __name__ == '__main__':
                     print(repr(M[i, j]).ljust(5), end="")
                 print()
             print()
+
+        try:
+            M,P = graphe.floyd_warshall()
+            print("\tmatrice M de Floyd-Warshall :")
+            afficheMatrice(sommets, M)
             print("\tmatrice P de Floyd-Warshall :")
-            print("\t" + "".ljust(5), end="")
-            for j in sommets:
-                print(repr(j).ljust(5), end="")
-            print()
-            for i in sommets:
-                print("\t" + repr(i).ljust(5), end="")
-                for j in sommets:
-                    print(repr(P[i, j]).ljust(5), end="")
-                print()
-            print()
+            afficheMatrice(sommets, P)
         except Exception as e:
             print("\tIl y a un circuit absorbant. Fin de l'algorithme de Floyd-Warshall : " + repr(e))
-
         """
         Sommet de depart choisi pour le test
         """

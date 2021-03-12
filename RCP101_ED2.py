@@ -17,7 +17,20 @@ def chemin(pere, s1, s2):
 def chemin2(P, s1, s2):
     if s1 == s2:
         return []
-    return chemin2(P, s1, P[s1, s2]) + [(P[s1,s2], s2)]
+    return chemin2(P, s1, P[s1, s2]) + [(P[s1, s2], s2)]
+
+def afficheMatrice(sommets, M):
+    M = dict(M)
+    print("\t" + "".ljust(5), end="")
+    for j in sommets:
+        print(repr(j).ljust(5), end="")
+    print()
+    for i in sommets:
+        print("\t" + repr(i).ljust(5), end="")
+        for j in sommets:
+            print(repr(M[i, j]).ljust(5), end="")
+        print()
+    print()
 
 graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 1")
 print(graphe.getCommentaire())
@@ -63,32 +76,13 @@ graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 4")
 print(graphe.getCommentaire())
 try:
     M, P = graphe.floyd_warshall()
+    afficheMatrice(sommets, M)
+    print("\tmatrice P de Floyd-Warshall :")
+    afficheMatrice(sommets, P)
+    for s1, s2 in [(x, y) for x in sommets for y in sommets if x != y]:
+        if M[s1, s2] == float('inf'):
+            print(f"Il n'y a pas de plus court chemin de {s1} à {s2}.")
+        else:
+            print(f"Plus court chemin de {s1} à {s2} :", chemin2(P, s1, s2), "- distance :", M[s1, s2])
 except Exception as e:
     print("\tIl y a un circuit absorbant. Fin de l'algorithme de Floyd-Warshall : " + repr(e))
-print("\tmatrice M de Floyd-Warshall :")
-print("\t" + "".ljust(5), end="")
-for j in sommets:
-    print(repr(j).ljust(5), end="")
-print()
-for i in sommets:
-    print("\t" + repr(i).ljust(5), end="")
-    for j in sommets:
-        print(repr(M[i, j]).ljust(5), end="")
-    print()
-print()
-print("\tmatrice P de Floyd-Warshall :")
-print("\t" + "".ljust(5), end="")
-for j in sommets:
-    print(repr(j).ljust(5), end="")
-print()
-for i in sommets:
-    print("\t" + repr(i).ljust(5), end="")
-    for j in sommets:
-        print(repr(P[i, j]).ljust(5), end="")
-    print()
-print()
-for s1, s2 in [(x,y) for x in sommets for y in sommets if x != y]:
-    if M[s1, s2] == float('inf'):
-        print(f"Il n'y a pas de plus court chemin de {s1} à {s2}.")
-    else:
-        print(f"Plus court chemin de {s1} à {s2} :", chemin2(P, s1, s2), "- distance :", M[s1, s2])
