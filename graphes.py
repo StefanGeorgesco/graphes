@@ -335,8 +335,8 @@ class GrapheOriente:
                 pi[x] = float('inf')
         for j in range(1, self.ordre()):
             for y in (sommets - A).intersection(self.successeurs(pivot)):
-                if pi[pivot] + p[(pivot,y)] < pi[y]:
-                    pi[y] = pi[pivot] + p[(pivot,y)]
+                if pi[pivot] + p[pivot,y] < pi[y]:
+                    pi[y] = pi[pivot] + p[pivot,y]
                     pere[y] = pivot
             mini = min([pi[z] for z in sommets - A])
             pivot = list(
@@ -378,14 +378,13 @@ class GrapheOriente:
                 pi[sommet] = float('inf')
         for j in range(2, self.ordre() + 1):
             y = list(num.keys())[list(num.values()).index(j)]
-            pi[y] = min([pi[x] + p[(x,y)] for x in A if x in self.predecesseurs(y)])
-            l = list(
+            pi[y] = min([pi[x] + p[x,y] for x in A if x in self.predecesseurs(y)])
+            x0 = list(
                     filter(
-                        lambda x: (x,y) in p and pi[y] == pi[x] + p[(x,y)],
+                        lambda x: (x,y) in p and pi[y] == pi[x] + p[x,y],
                         list(A)
                 )
-            )
-            x0 = l[0]
+            )[0]
             pere[y] = x0
             A.add(y)
         return pi, pere
@@ -396,18 +395,18 @@ class GrapheOriente:
         P = {}
         for x in self._sommets:
             for y in self._sommets:
-                M[(x,y)] = self._p[(x,y)] if x != y and (x,y) in self.arcs() \
+                M[x,y] = self._p[x,y] if x != y and (x,y) in self.arcs() \
                     else min(0, self._p[x,y]) if x == y and (x,y) in self.arcs() \
                     else 0 if x == y and (x,y) not in self.arcs() \
                     else float('inf')
-                P[(x,y)] = x if x != y and (x,y) in self.arcs() else None
+                P[x,y] = x if x != y and (x,y) in self.arcs() else None
         for k in self._sommets:
             for i in self._sommets:
                 for j in self._sommets:
-                    if M[(i,k)] + M[(k,j)] < M[(i,j)]:
-                        M[(i,j)] = M[(i,k)] + M[(k,j)]
-                        P[(i,j)] = P[(k,j)]
-                    if i == j and M[(i,j)] < 0:
+                    if M[i,k] + M[k,j] < M[i,j]:
+                        M[i,j] = M[i,k] + M[k,j]
+                        P[i,j] = P[k,j]
+                    if i == j and M[i,j] < 0:
                         raise Exception("il existe un circuit absorbant au niveau de " + repr(i))
 
         return (M,P)
@@ -418,12 +417,11 @@ class GrapheOriente:
         def chemin_rec(s1,s2):
             if s1 == s2:
                 return []
-            si = P[(s1,s2)]
-            return chemin_rec(s1,si) + [(si,s2)]
+            return chemin_rec(s1,P[s1,s2]) + [(P[s1,s2],s2)]
 
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
             raise Exception("les sommets doivent appartenir au graphe")
-        if M[(sommet1,sommet2)] == float('inf'):
+        if M[sommet1,sommet2] == float('inf'):
             raise Exception("il n'y a pas de plus court chemin entre " + repr(sommet1) + " et " + repr(sommet2))
 
-        return chemin_rec(sommet1,sommet2), M[(sommet1,sommet2)]
+        return chemin_rec(sommet1,sommet2), M[sommet1,sommet2]
