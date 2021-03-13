@@ -1,4 +1,5 @@
-from graphes_exemples import graphes_orientes, \
+from graphes_exemples import \
+    graphes_orientes, \
     listes_sommets_graphes_orientes, \
     sommets_depart_graphes_orientes
 
@@ -6,13 +7,12 @@ if __name__ == '__main__':
     """
     Déroulement des tests
     """
-    for i in range(len(graphes_orientes)):
-        graphe = graphes_orientes[i]
-        sommets = listes_sommets_graphes_orientes[i]
-        depart = sommets_depart_graphes_orientes[i]
-        titre = graphe.getCommentaire()
+    for nom in graphes_orientes.keys():
+        graphe = graphes_orientes[nom]
+        sommets = listes_sommets_graphes_orientes[nom]
+        depart = sommets_depart_graphes_orientes[nom]
         print()
-        print("Cas", i, ":", titre)
+        print("Cas", nom, ":")
         print()
 
         """

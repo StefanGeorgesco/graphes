@@ -1,13 +1,7 @@
 from graphes_exemples import graphes_orientes, listes_sommets_graphes_orientes
 
 def get_graphes_orientes(nom):
-    index = list(
-        map(
-            lambda g: g.getCommentaire(),
-            graphes_orientes
-        )
-    ).index(nom)
-    return graphes_orientes[index], listes_sommets_graphes_orientes[index]
+    return graphes_orientes[nom], listes_sommets_graphes_orientes[nom]
 
 def chemin(pere, s1, s2):
     if s1 == s2:

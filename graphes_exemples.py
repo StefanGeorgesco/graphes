@@ -2,7 +2,7 @@ from graphes import *
 
 donnees_graphes_orientes = [
     {
-        "titre": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), pages 25/27/33",
+        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), pages 25/27/33",
         "noms_sommets": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"],
         "liens": [
             ("1", "2", 1),
@@ -49,7 +49,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "1"
     },
     {
-        "titre": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74",
+        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74",
         "noms_sommets": ["1", "2", "3", "4", "5", "6", "7", "8"],
         "liens": [
             ("1", "2", 8),
@@ -68,7 +68,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "1"
     },
     {
-        "titre": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85",
+        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85",
         "noms_sommets": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "liens": [
             ("1", "2", 1),
@@ -90,7 +90,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "1"
     },
     {
-        "titre": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92",
+        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92",
         "noms_sommets": ["A", "B", "C", "D", "E", "F"],
         "liens": [
             ("A", "B", 4),
@@ -107,7 +107,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "A"
     },
     {
-        "titre": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 112 - Méthode MPM - Dates au plus tôt et chemin critique",
+        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 112 - Méthode MPM - Dates au plus tôt et chemin critique",
         "noms_sommets": ["début", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "fin"],
         "liens": [
             ("début", "a", 0),
@@ -130,7 +130,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "début"
     },
     {
-        "titre": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 112 - Méthode MPM - Dates au plus tard",
+        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 112 - Méthode MPM - Dates au plus tard",
         "noms_sommets": ["début", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "fin"],
         "liens": [
             ("a", "début", 0),
@@ -153,7 +153,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "fin"
     },
     {
-        "titre": "RCP101 - ED1 - Exercice 1",
+        "nom": "RCP101 - ED1 - Exercice 1",
         "noms_sommets": ["A", "B", "C", "D", "E", "F"],
         "liens": [
             ("A", "B", 1),
@@ -174,7 +174,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "A"
     },
     {
-        "titre": "RCP101 - ED1 - Exercice 2 - Question 1",
+        "nom": "RCP101 - ED1 - Exercice 2 - Question 1",
         "noms_sommets": ["A+", "A-", "B+", "B-", "C+", "C-", "D+", "D-", "E+", "E-"],
         "liens": [
             ("A+", "B+", 1),
@@ -197,7 +197,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "B-"
     },
     {
-        "titre": "RCP101 - ED1 - Exercice 2 - Question 2",
+        "nom": "RCP101 - ED1 - Exercice 2 - Question 2",
         "noms_sommets": ["A+", "A-", "B+", "B-", "C+", "C-", "D+", "D-", "E+", "E-", "F+", "F-"],
         "liens": [
             ("A+", "B+", 1),
@@ -224,7 +224,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "B-"
     },
     {
-        "titre": "RCP101 - ED2 - Exercice 1",
+        "nom": "RCP101 - ED2 - Exercice 1",
         "noms_sommets": [
             "T1A0",
             "T2A0", "T2A1",
@@ -263,7 +263,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "T1A0"
     },
     {
-        "titre": "RCP101 - ED2 - Exercice 2",
+        "nom": "RCP101 - ED2 - Exercice 2",
         "noms_sommets": ["x1", "x2", "x3", "x4", "x5", "x6"],
         "liens": [
             ("x1", "x2", 2),
@@ -280,7 +280,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "x1"
     },
     {
-        "titre": "RCP101 - ED2 - Exercice 3 questions 1 et 2",
+        "nom": "RCP101 - ED2 - Exercice 3 questions 1 et 2",
         "noms_sommets": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
         "liens": [
             ("1", "2", 3),
@@ -303,7 +303,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "1"
     },
     {
-        "titre": "RCP101 - ED2 - Exercice 3 question 3",
+        "nom": "RCP101 - ED2 - Exercice 3 question 3",
         "noms_sommets": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
         "liens": [
             ("1", "2", -3),
@@ -326,7 +326,7 @@ donnees_graphes_orientes = [
         "sommet_départ": "1"
     },
     {
-        "titre": "RCP101 - ED2 - Exercice 4",
+        "nom": "RCP101 - ED2 - Exercice 4",
         "noms_sommets": ["A", "B", "C", "D", "E"],
         "liens": [
             ("A", "C", 3),
@@ -343,7 +343,7 @@ donnees_graphes_orientes = [
 ]
 donnees_graphes_non_orientes = [
     {
-        "titre": "Exemple de graphe non orienté",
+        "nom": "Exemple de graphe non orienté",
         "noms_sommets": ["A", "B", "C", "D", "E", "F"],
         "liens": [
             ("A", "B"),
@@ -359,29 +359,31 @@ donnees_graphes_non_orientes = [
 ]
 
 
-graphes_orientes = []
-listes_sommets_graphes_orientes = []
-sommets_depart_graphes_orientes = []
+graphes_orientes = {}
+listes_sommets_graphes_orientes = {}
+sommets_depart_graphes_orientes = {}
 
 for jeu_donnees_graphes_orientes in donnees_graphes_orientes:
+    nom = jeu_donnees_graphes_orientes["nom"]
     noms_sommets = jeu_donnees_graphes_orientes["noms_sommets"]
     sommets = [Sommet(nom) for nom in noms_sommets]
-    listes_sommets_graphes_orientes.append(sommets)
-    graphe = GrapheOriente(*sommets, commentaire=jeu_donnees_graphes_orientes["titre"])
+    listes_sommets_graphes_orientes[nom] = sommets
+    graphe = GrapheOriente(*sommets, commentaire=nom)
     for nom1, nom2, poids in jeu_donnees_graphes_orientes["liens"]:
         graphe.lier(sommets[noms_sommets.index(nom1)], sommets[noms_sommets.index(nom2)], poids)
-    graphes_orientes.append(graphe)
-    sommets_depart_graphes_orientes.append(sommets[noms_sommets.index(jeu_donnees_graphes_orientes["sommet_départ"])])
+    graphes_orientes[nom] = graphe
+    sommets_depart_graphes_orientes[nom] = sommets[noms_sommets.index(jeu_donnees_graphes_orientes["sommet_départ"])]
 
-graphes_non_orientes = []
-listes_sommets_graphes_non_orientes = []
+graphes_non_orientes = {}
+listes_sommets_graphes_non_orientes = {}
 
 for jeu_donnees_graphes_non_orientes in donnees_graphes_non_orientes:
+    nom = jeu_donnees_graphes_non_orientes["nom"]
     noms_sommets = jeu_donnees_graphes_non_orientes["noms_sommets"]
     sommets = [Sommet(nom) for nom in noms_sommets]
-    listes_sommets_graphes_non_orientes.append(sommets)
-    graphe = GrapheNonOriente(*sommets, commentaire=jeu_donnees_graphes_non_orientes["titre"])
+    listes_sommets_graphes_non_orientes[nom] = sommets
+    graphe = GrapheNonOriente(*sommets, commentaire=nom)
     for nom1, nom2 in jeu_donnees_graphes_non_orientes["liens"]:
         graphe.lier(sommets[noms_sommets.index(nom1)], sommets[noms_sommets.index(nom2)])
-    graphes_non_orientes.append(graphe)
+    graphes_non_orientes[nom] = graphe
 

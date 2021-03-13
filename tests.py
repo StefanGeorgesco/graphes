@@ -8,6 +8,19 @@ from graphes_exemples import \
 
 class TestStringMethods(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self.graphesNonOrientes = {}
+        for nom in graphes_non_orientes.keys():
+            self.graphesNonOrientes.update({nom: (graphes_non_orientes[nom], listes_sommets_graphes_non_orientes[nom])})
+        self.graphesOrientes = {}
+        for nom in graphes_orientes.keys():
+            self.graphesOrientes.update({nom: (graphes_orientes[nom], listes_sommets_graphes_orientes[nom])})
+
+    def chemin(self, pere, s1, s2):
+        if s1 == s2:
+            return []
+        return self.chemin(pere, s1, pere[s2]) + [(pere[s2], s2)]
+
     def test_ordre_et_taille_graphe_non_oriente(self):
         s1 = Sommet("1")
         s2 = Sommet("2")
@@ -26,7 +39,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(5, graphe2.taille())
 
     def test_sommets_et_aretes_graphe_non_oriente(self):
-        graphe, sommets = self.get_graphes_non_orientes("Exemple de graphe non orienté")
+        graphe, sommets = self.graphesNonOrientes["Exemple de graphe non orienté"]
         A, B, C, D, E, F = sommets
         self.assertEqual(set(sommets), graphe.getSommets())
         aretes = graphe.getAretes()
@@ -46,7 +59,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertFalse({A, E} in aretes)
 
     def test_copie_graphe_non_oriente(self):
-        graphe, sommets = self.get_graphes_non_orientes("Exemple de graphe non orienté")
+        graphe, sommets = self.graphesNonOrientes["Exemple de graphe non orienté"]
         A, B, C, D, E, F = sommets
         graphe.setNom("nom")
         graphe_copie = graphe.copie()
@@ -70,7 +83,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertFalse({A, E} in aretes)
 
     def test_sous_graphe_graphe_non_oriente(self):
-        graphe, sommets = self.get_graphes_non_orientes("Exemple de graphe non orienté")
+        graphe, sommets = self.graphesNonOrientes["Exemple de graphe non orienté"]
         A, B, C, D, E, F = sommets
         sous_graphe = graphe.sous_graphe({A, B, C, E, F})
         self.assertEqual(5, len(sous_graphe.getSommets()))
@@ -79,7 +92,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual([{A,B}, {A,C}, {A,F}, {B,E}, {C,E}], sous_graphe.getAretes())
 
     def test_graphe_partiel_graphe_non_oriente(self):
-        graphe, sommets = self.get_graphes_non_orientes("Exemple de graphe non orienté")
+        graphe, sommets = self.graphesNonOrientes["Exemple de graphe non orienté"]
         A, B, C, D, E, F = sommets
         graphe_partiel = graphe.graphe_partiel([{A,C}, {A,F}, {B,E}, {C,D}, {D,E}])
         self.assertEqual(6, len(graphe_partiel.getSommets()))
@@ -126,7 +139,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(5, graphe2.taille())
 
     def test_sommets_et_arcs_graphe_oriente(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         self.assertEqual(set(sommets), graphe.getSommets())
         arcs = graphe.arcs()
@@ -146,7 +159,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertFalse((D, A) in arcs)
 
     def test_copie_graphe_oriente(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         graphe.setNom("nom")
         graphe_copie = graphe.copie()
@@ -170,7 +183,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertFalse((D, A) in arcs)
 
     def test_sous_graphe_graphe_oriente(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         sous_graphe = graphe.sous_graphe({A, B, C, E, F})
         self.assertEqual(5, len(sous_graphe.getSommets()))
@@ -179,7 +192,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({(A,B), (A,E), (B,E), (B,C), (F,E), (C,F)}, sous_graphe.arcs())
 
     def test_graphe_partiel_graphe_oriente(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         graphe_partiel = graphe.graphe_partiel({(A,B), (B,C), (C,F), (F,E), (F,D)})
         self.assertEqual(6, len(graphe_partiel.getSommets()))
@@ -188,7 +201,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({(A,B), (B,C), (C,F), (F,E), (F,D)}, graphe_partiel.arcs())
 
     def test_successeurs(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         self.assertEqual({B,E}, graphe.successeurs(A))
         self.assertEqual({C, E}, graphe.successeurs(B))
@@ -198,7 +211,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({D, E}, graphe.successeurs(F))
 
     def test_predecesseurs(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         self.assertEqual(set(), graphe.predecesseurs(A))
         self.assertEqual({A,D}, graphe.predecesseurs(B))
@@ -208,7 +221,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({C}, graphe.predecesseurs(F))
 
     def test_descendants(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85"]
         S1, S2, S3, S4, S5, S6, S7, S8, S9 = sommets
         self.assertEqual({S3, S4, S5, S6, S7, S8, S9}, graphe.descendants(S3))
         self.assertEqual({S4, S6, S7, S8, S9}, graphe.descendants(S7))
@@ -216,7 +229,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({S8}, graphe.descendants(S8))
 
     def test_ascendants(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85"]
         S1, S2, S3, S4, S5, S6, S7, S8, S9 = sommets
         self.assertEqual({S1, S3}, graphe.ascendants(S3))
         self.assertEqual({S1, S2, S3, S5, S7}, graphe.ascendants(S7))
@@ -224,13 +237,13 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({S1, S2, S3, S4, S5, S6, S7, S8, S9}, graphe.ascendants(S8))
 
     def test_cfc0(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED1 - Exercice 1")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 1"]
         A, B, C, D, E, F = sommets
         self.assertEqual({D,C}, graphe.cfc(D))
         self.assertEqual({A,B,E,F}, graphe.cfc(B))
 
     def test_cfcs0(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED1 - Exercice 1")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 1"]
         A, B, C, D, E, F = sommets
         cfcs = graphe.cfcs()
         self.assertEqual(2, len(cfcs))
@@ -239,7 +252,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertFalse(graphe.estFortementConnexe())
 
     def test_cfc1(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED1 - Exercice 2 - Question 1")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 2 - Question 1"]
         Ap, Am, Bp, Bm, Cp, Cm, Dp, Dm, Ep, Em = sommets
         self.assertEqual({Bm,Am, Dp, Cp}, graphe.cfc(Bm))
         self.assertEqual({Bp, Ap, Dm, Cm}, graphe.cfc(Bp))
@@ -247,7 +260,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({Em}, graphe.cfc(Em))
 
     def test_cfcs1(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED1 - Exercice 2 - Question 1")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 2 - Question 1"]
         Ap, Am, Bp, Bm, Cp, Cm, Dp, Dm, Ep, Em = sommets
         cfcs = graphe.cfcs()
         self.assertEqual(4, len(cfcs))
@@ -258,7 +271,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertFalse(graphe.estFortementConnexe())
 
     def test_cfc2(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED1 - Exercice 2 - Question 2")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 2 - Question 2"]
         Ap, Am, Bp, Bm, Cp, Cm, Dp, Dm, Ep, Em, Fp, Fm = sommets
         self.assertEqual(set(sommets), graphe.cfc(Bm))
         self.assertEqual(set(sommets), graphe.cfc(Bp))
@@ -266,7 +279,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(set(sommets), graphe.cfc(Em))
 
     def test_cfcs2(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED1 - Exercice 2 - Question 2")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 2 - Question 2"]
         cfcs = graphe.cfcs()
         self.assertEqual(1, len(cfcs))
         self.assertEqual(set(sommets), cfcs[0])
@@ -274,7 +287,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertTrue(graphe.estFortementConnexe())
 
     def test_dijkstra(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74"]
         S1, S2, S3, S4, S5, S6, S7, S8 = sommets
         pi, pere = graphe.dijkstra(S1)
         self.assertEqual([(S1, S3), (S3, S4), (S4, S2)], self.chemin(pere, S1,S2))
@@ -285,13 +298,13 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(6, pi[S2])
 
     def test_numerotation_topolgique_graphe_oriente(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85"]
         num = graphe.numerotation_topolgique()
         self.assertEqual(set(sommets), set(num.keys()))
         self.assertEqual({1,2,3,4,5,6,7,8,9}, set(num.values()))
 
     def test_bellman(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85"]
         S1, S2, S3, S4, S5, S6, S7, S8, S9 = sommets
         pi, pere = graphe.bellman(S1)
         self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S6), (S6, S9)], self.chemin(pere, S1, S9))
@@ -302,21 +315,21 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(0, pi[S6])
 
     def test_bellman_ford(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED2 - Exercice 4")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 4"]
         A, B, C, D, E = sommets
         pi, pere = graphe.bellman_ford(A)
         self.assertEqual([(A, D), (D, E)], self.chemin(pere, A, E))
         self.assertEqual(5, pi[E])
 
     def test_ford(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         pi, pere = graphe.ford(A)
         self.assertEqual([(A, B), (B, C), (C, F)], self.chemin(pere, A, F))
         self.assertEqual(-1, pi[F])
 
     def test_floyd_warshall(self):
-        graphe, sommets = self.get_graphes_orientes("RCP101 - ED2 - Exercice 4")
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 4"]
         A, B, C, D, E = sommets
         M, P = graphe.floyd_warshall()
         self.assertEqual(5, M[A, B])
@@ -331,7 +344,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(None, P[C, A])
 
     def test_plus_court_chemin(self):
-        graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         chemin, longueur = graphe.plus_court_chemin(A, D)
         self.assertEqual(4, len(chemin))
@@ -341,29 +354,6 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(3, len(chemin))
         self.assertEqual([(B,C), (C,F), (F,D)], chemin)
         self.assertEqual(-4, longueur)
-
-    def chemin(self, pere, s1, s2):
-        if s1 == s2:
-            return []
-        return self.chemin(pere, s1, pere[s2]) + [(pere[s2], s2)]
-
-    def get_graphes_orientes(self, nom):
-        index = list(
-            map(
-                lambda g: g.getCommentaire(),
-                graphes_orientes
-            )
-        ).index(nom)
-        return graphes_orientes[index], listes_sommets_graphes_orientes[index]
-
-    def get_graphes_non_orientes(self, nom):
-        index = list(
-            map(
-                lambda g: g.getCommentaire(),
-                graphes_non_orientes
-            )
-        ).index(nom)
-        return graphes_non_orientes[index], listes_sommets_graphes_non_orientes[index]
 
 
 if __name__ == '__main__':
