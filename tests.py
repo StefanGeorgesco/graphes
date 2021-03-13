@@ -277,12 +277,8 @@ class TestStringMethods(unittest.TestCase):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74")
         S1, S2, S3, S4, S5, S6, S7, S8 = sommets
         pi, pere = graphe.dijkstra(S1)
-        def chemin(s1,s2):
-            if s1 == s2:
-                return []
-            return chemin(s1, pere[s2]) + [(pere[s2], s2)]
-        self.assertEqual([(S1, S3), (S3, S4), (S4, S2)], chemin(S1,S2))
-        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], chemin(S1,S8))
+        self.assertEqual([(S1, S3), (S3, S4), (S4, S2)], self.chemin(pere, S1,S2))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], self.chemin(pere, S1,S8))
         self.assertEqual(5, pi[S8])
         self.assertEqual(4, pi[S7])
         self.assertEqual(3, pi[S6])
@@ -298,12 +294,8 @@ class TestStringMethods(unittest.TestCase):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85")
         S1, S2, S3, S4, S5, S6, S7, S8, S9 = sommets
         pi, pere = graphe.bellman(S1)
-        def chemin(s1,s2):
-            if s1 == s2:
-                return []
-            return chemin(s1, pere[s2]) + [(pere[s2], s2)]
-        self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S6), (S6, S9)], chemin(S1, S9))
-        self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S8)], chemin(S1,S8))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S6), (S6, S9)], self.chemin(pere, S1, S9))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S8)], self.chemin(pere, S1,S8))
         self.assertEqual(1, pi[S9])
         self.assertEqual(-2, pi[S8])
         self.assertEqual(1, pi[S7])
@@ -313,22 +305,14 @@ class TestStringMethods(unittest.TestCase):
         graphe, sommets = self.get_graphes_orientes("RCP101 - ED2 - Exercice 4")
         A, B, C, D, E = sommets
         pi, pere = graphe.bellman_ford(A)
-        def chemin(s1,s2):
-            if s1 == s2:
-                return []
-            return chemin(s1, pere[s2]) + [(pere[s2], s2)]
-        self.assertEqual([(A, D), (D, E)], chemin(A, E))
+        self.assertEqual([(A, D), (D, E)], self.chemin(pere, A, E))
         self.assertEqual(5, pi[E])
 
     def test_ford(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
         A, B, C, D, E, F = sommets
         pi, pere = graphe.ford(A)
-        def chemin(s1,s2):
-            if s1 == s2:
-                return []
-            return chemin(s1, pere[s2]) + [(pere[s2], s2)]
-        self.assertEqual([(A, B), (B, C), (C, F)], chemin(A, F))
+        self.assertEqual([(A, B), (B, C), (C, F)], self.chemin(pere, A, F))
         self.assertEqual(-1, pi[F])
 
     def test_floyd_warshall(self):
@@ -357,6 +341,11 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(3, len(chemin))
         self.assertEqual([(B,C), (C,F), (F,D)], chemin)
         self.assertEqual(-4, longueur)
+
+    def chemin(self, pere, s1, s2):
+        if s1 == s2:
+            return []
+        return self.chemin(pere, s1, pere[s2]) + [(pere[s2], s2)]
 
     def get_graphes_orientes(self, nom):
         index = list(
