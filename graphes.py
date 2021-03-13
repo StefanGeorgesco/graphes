@@ -10,7 +10,7 @@ class GrapheNonOriente:
     def __init__(self, *sommets, aretes=None, nom="", commentaire=""):
         for sommet in sommets:
             if not isinstance(sommet, Sommet):
-                raise Exception("Les sommets doivent appartenir au type Sommet")
+                raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
         self._sommets = set(sommets)
         if aretes is None:
             aretes = []
@@ -26,10 +26,10 @@ class GrapheNonOriente:
                     aretesUniques
                 )
         ):
-            raise Exception("les arêtes doivent être des ensembles de 2 sommets de 'sommets'")
+            raise Exception(f"Les arêtes doivent être des ensembles de 2 sommets de {sommets}")
         self._aretes = aretesUniques
-        self._nom = nom
-        self._commentaire = commentaire
+        self.setNom(nom)
+        self.setCommentaire(commentaire)
 
     def __repr__(self):
         return f"GrapheNonOrienté {self._nom} ({self._sommets}, {self._aretes})"
@@ -79,7 +79,7 @@ class GrapheNonOriente:
     def sous_graphe(self, sommets):
         for sommet in sommets:
             if not isinstance(sommet, Sommet):
-                raise Exception("Les sommets doivent appartenir au type Sommet")
+                raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
         sommetsUniques = []
         for sommet in sommets:
             if sommet not in sommetsUniques:
@@ -111,7 +111,7 @@ class GrapheNonOriente:
             )
         ):
             raise Exception("Les arêtes doivent appartenir au graphe")
-        return GrapheNonOriente(*list(self._sommets), aretes=aretesUniques)
+        return GrapheNonOriente(*self.getSommets(), aretes=aretesUniques)
 
     def clique(n):
         if not isinstance(n, int) or n < 1:
@@ -137,7 +137,7 @@ class GrapheOriente:
     def __init__(self, *sommets, p=None, nom="", commentaire=""):
         for sommet in sommets:
             if not isinstance(sommet, Sommet):
-                raise Exception("Les sommets doivent appartenir au type Sommet")
+                raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
         self._sommets = set(sommets)
         if p is None:
             p = {}
@@ -152,7 +152,7 @@ class GrapheOriente:
                     p.keys()
                 )
         ):
-            raise Exception("les clés de p doivent être des 2-tuples de sommets de 'sommets'")
+            raise Exception(f"Les clés de p doivent être des 2-tuples de sommets de {sommets}")
         if not all(
             map(
                 lambda x: isinstance(x,int) or \
@@ -160,17 +160,17 @@ class GrapheOriente:
                 p.values()
             )
         ):
-            raise Exception("les valeurs de p doivent être des entiers ou des flottants")
+            raise Exception("Les valeurs de p doivent être des entiers ou des flottants")
         self._p = dict(p)
-        self._nom = nom
-        self._commentaire = commentaire
+        self.setNom(nom)
+        self.setCommentaire(commentaire)
 
     def __repr__(self):
         return f"GrapheOrienté {self._nom} ({self._sommets}, {self._p})"
 
     def lier(self, sommet1, sommet2, poids):
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
-            raise Exception("les sommets doivent appartenir au graphe")
+            raise Exception("Les sommets doivent appartenir au graphe")
         self._p[(sommet1,sommet2)] = poids
 
     def getSommets(self):
@@ -215,7 +215,7 @@ class GrapheOriente:
     def sous_graphe(self, sommets):
         for sommet in sommets:
             if not isinstance(sommet, Sommet):
-                raise Exception("Les sommets doivent appartenir au type Sommet")
+                raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
         sommets = list(sommets)
         if not all(
             map(
@@ -488,8 +488,7 @@ class GrapheOriente:
                         M[i,j] = M[i,k] + M[k,j]
                         P[i,j] = P[k,j]
                     if i == j and M[i,j] < 0:
-                        raise Exception("il existe un circuit absorbant au niveau de " + repr(i))
-
+                        raise Exception(f"Il existe un circuit absorbant au niveau de {i}")
         return (M,P)
 
     def plus_court_chemin(self, sommet1, sommet2):
@@ -503,6 +502,5 @@ class GrapheOriente:
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
             raise Exception("les sommets doivent appartenir au graphe")
         if M[sommet1,sommet2] == float('inf'):
-            raise Exception("il n'y a pas de plus court chemin entre " + repr(sommet1) + " et " + repr(sommet2))
-
+            raise Exception(f"Il n'y a pas de plus court chemin entre {sommet1} et {sommet2}")
         return chemin_rec(sommet1,sommet2), M[sommet1,sommet2]

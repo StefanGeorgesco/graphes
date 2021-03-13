@@ -333,6 +333,10 @@ class TestStringMethods(unittest.TestCase):
         pi, pere = graphe.ford(A)
         self.assertEqual([(A, B), (B, C), (C, F)], self.chemin(pere, A, F))
         self.assertEqual(-1, pi[F])
+        self.assertEqual([(A,B), (B, E)], self.chemin(pere, A, E))
+        self.assertEqual(2, pi[E])
+        self.assertEqual([(A, B), (B, C), (C, F), (F, D)], self.chemin(pere, A, D))
+        self.assertEqual(0, pi[D])
 
     def test_floyd_warshall(self):
         graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 4"]
