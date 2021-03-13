@@ -244,12 +244,12 @@ class GrapheOriente:
         p = {}
         for arc in arcs:
             p.update({tuple(arc): self._p[arc]})
-        return GrapheOriente(*list(self._sommets), p=p)
+        return GrapheOriente(*self.getSommets(), p=p)
 
     def successeurs(self, sommet):
         if sommet not in self._sommets:
             raise Exception("Le sommet n'est pas dans le graphe")
-        arcs = self._p.keys()
+        arcs = self.getP().keys()
         return set(
             map(
                 lambda x: x[1],
@@ -263,7 +263,7 @@ class GrapheOriente:
     def predecesseurs(self, sommet):
         if sommet not in self._sommets:
             raise Exception("Le sommet n'est pas dans le graphe")
-        arcs = self._p.keys()
+        arcs = self.getP().keys()
         return set(
             map(
                 lambda x: x[0],
@@ -328,12 +328,14 @@ class GrapheOriente:
         pivot = r
         pi = {r:0}
         pere = {}
-        p = self._p
+        p = self.getP()
+        n = self.ordre()
         sommets = self._sommets
-        for x in sommets:
-            if x != r:
-                pi[x] = float('inf')
-        for j in range(1, self.ordre()):
+        for x in sommets - {r}:
+            pi[x] = float('inf')
+        if n < 2:
+            return pi, pere
+        for j in range(1, n):
             for y in (sommets - A).intersection(self.successeurs(pivot)):
                 if pi[pivot] + p[pivot,y] < pi[y]:
                     pi[y] = pi[pivot] + p[pivot,y]
@@ -351,7 +353,10 @@ class GrapheOriente:
     def numerotation_topolgique(self):
         num = {}
         graphe = self.copie()
-        for i in range(1, self.ordre() + 1):
+        n = graphe.ordre()
+        if n < 1:
+            return num
+        for i in range(1, n + 1):
             sommet = None
             for s in graphe.getSommets():
                 if len(graphe.predecesseurs(s)) == 0:
@@ -373,10 +378,12 @@ class GrapheOriente:
         pi = {r:0}
         pere = {}
         p = self.getP()
-        for sommet in self._sommets:
-            if sommet != r:
-                pi[sommet] = float('inf')
-        for j in range(2, self.ordre() + 1):
+        n = self.ordre()
+        for sommet in self._sommets - {r}:
+            pi[sommet] = float('inf')
+        if n < 2:
+            return pi, pere
+        for j in range(2, n + 1):
             y = list(num.keys())[list(num.values()).index(j)]
             pi[y] = min([pi[x] + p[x,y] for x in A if x in self.predecesseurs(y)])
             x0 = list(
@@ -389,6 +396,36 @@ class GrapheOriente:
             A.add(y)
         return pi, pere
 
+    def bellman_ford(self, r):
+        if r not in self._sommets:
+            raise Exception("'sommet' doit être un sommet du graphe")
+        pi = {r:0}
+        pere = {}
+        p = self.getP()
+        n = self.ordre()
+        sommets = self._sommets
+        for sommet in sommets - {r}:
+            if sommet in self.successeurs(r):
+                pi[sommet] = p[r, sommet]
+                pere[sommet] = r
+            else:
+                pi[sommet] = float('inf')
+        if n < 3:
+            return pi, pere
+        for k in range(1, n - 1):
+            for sommet in sommets - {r}:
+                mini = min([pi[y] + p[y, sommet] for y in self.predecesseurs(sommet)])
+                x0 = list(
+                    filter(
+                        lambda y: pi[y] + p[y, sommet] == mini,
+                        self.predecesseurs(sommet)
+                    )
+                )[0]
+                if pi[x0] + p[x0, sommet] < pi[sommet]:
+                    pi[sommet] = pi[x0] + p[x0, sommet]
+                    pere[sommet] = x0
+        return pi, pere
+
     def ford(self, r):
         if r not in self._sommets:
             raise Exception("'sommet' doit être un sommet du graphe")
@@ -397,13 +434,13 @@ class GrapheOriente:
         pere = {}
         p = self.getP()
         n = self.ordre()
-        for sommet in self._sommets:
-            if sommet != r:
-                pi[0].update({sommet: float('inf')})
+        sommets = self._sommets
+        for sommet in sommets - {r}:
+            pi[0].update({sommet: float('inf')})
         while True:
             changement = False
             k += 1
-            for sommet in self._sommets:
+            for sommet in sommets:
                 predecesseurs = self.predecesseurs(sommet)
                 if len(predecesseurs) > 0:
                     mini = min(
@@ -434,16 +471,17 @@ class GrapheOriente:
         n = len(self._sommets)
         M = {}
         P = {}
-        for x in self._sommets:
-            for y in self._sommets:
+        sommets = self._sommets
+        for x in sommets:
+            for y in sommets:
                 M[x,y] = self._p[x,y] if x != y and (x,y) in self.arcs() \
                     else min(0, self._p[(x,y)]) if x == y and (x,y) in self.arcs() \
                     else 0 if x == y and (x,y) not in self.arcs() \
                     else float('inf')
                 P[x,y] = x if x != y and (x,y) in self.arcs() else None
-        for k in self._sommets:
-            for i in self._sommets:
-                for j in self._sommets:
+        for k in sommets:
+            for i in sommets:
+                for j in sommets:
                     if M[i,k] + M[k,j] < M[i,j]:
                         M[i,j] = M[i,k] + M[k,j]
                         P[i,j] = P[k,j]

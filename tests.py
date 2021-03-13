@@ -309,6 +309,17 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(1, pi[S7])
         self.assertEqual(0, pi[S6])
 
+    def test_bellman_ford(self):
+        graphe, sommets = self.get_graphes_orientes("RCP101 - ED2 - Exercice 4")
+        A, B, C, D, E = sommets
+        pi, pere = graphe.bellman_ford(A)
+        def chemin(s1,s2):
+            if s1 == s2:
+                return []
+            return chemin(s1, pere[s2]) + [(pere[s2], s2)]
+        self.assertEqual([(A, D), (D, E)], chemin(A, E))
+        self.assertEqual(5, pi[E])
+
     def test_ford(self):
         graphe, sommets = self.get_graphes_orientes("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92")
         A, B, C, D, E, F = sommets
