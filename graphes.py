@@ -414,16 +414,18 @@ class GrapheOriente:
             return pi, pere
         for k in range(1, n - 1):
             for sommet in sommets - {r}:
-                mini = min([pi[y] + p[y, sommet] for y in self.predecesseurs(sommet)])
-                x0 = list(
-                    filter(
-                        lambda y: pi[y] + p[y, sommet] == mini,
-                        self.predecesseurs(sommet)
-                    )
-                )[0]
-                if pi[x0] + p[x0, sommet] < pi[sommet]:
-                    pi[sommet] = pi[x0] + p[x0, sommet]
-                    pere[sommet] = x0
+                predecesseurs = self.predecesseurs(sommet)
+                if len(predecesseurs) > 0:
+                    mini = min([pi[y] + p[y, sommet] for y in predecesseurs])
+                    x0 = list(
+                        filter(
+                            lambda y: pi[y] + p[y, sommet] == mini,
+                            predecesseurs
+                        )
+                    )[0]
+                    if pi[x0] + p[x0, sommet] < pi[sommet]:
+                        pi[sommet] = pi[x0] + p[x0, sommet]
+                        pere[sommet] = x0
         return pi, pere
 
     def ford(self, r):

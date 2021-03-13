@@ -320,6 +320,12 @@ class TestStringMethods(unittest.TestCase):
         pi, pere = graphe.bellman_ford(A)
         self.assertEqual([(A, D), (D, E)], self.chemin(pere, A, E))
         self.assertEqual(5, pi[E])
+        pi, pere = graphe.bellman_ford(C)
+        self.assertEqual([(C, D), (D, E)], self.chemin(pere, C, E))
+        self.assertEqual(2, pi[E])
+        pi, pere = graphe.bellman_ford(B)
+        self.assertEqual([(B, D), (D, E)], self.chemin(pere, B, E))
+        self.assertEqual(1, pi[E])
 
     def test_ford(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
