@@ -65,7 +65,7 @@ if __name__ == '__main__':
         """
         for y in set(sommets) - {depart}:
             try:
-                c, d = graphe.plus_court_chemin(depart, y)
+                c, d = graphe.chemin_optimal(depart, y)
                 print("\t" + ("chemin jusqu'à " + repr(y)).ljust(30), " :", c)
                 print("\t" + ("distance du chemin jusqu'à " + repr(y)).ljust(30), " :", d)
             except Exception as e:

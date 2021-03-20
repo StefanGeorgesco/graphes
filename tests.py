@@ -304,6 +304,22 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual({1,2,3,4,5,6,7,8,9}, set(num.values()))
 
     def test_bellman(self):
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
+        S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
+        pi, pere = graphe.bellman(S1)
+        self.assertEqual(S7, pere[S9])
+        self.assertEqual(S1, pere[S3])
+        self.assertEqual(S1, pere[S4])
+        self.assertEqual(6, pi[S10])
+        self.assertEqual(14, pi[S8])
+        self.assertEqual(11, pi[S5])
+        pi, pere = graphe.bellman(S1, plus_long=True)
+        self.assertEqual(S6, pere[S9])
+        self.assertEqual(S5, pere[S3])
+        self.assertEqual(S3, pere[S4])
+        self.assertEqual(24, pi[S10])
+        self.assertEqual(22, pi[S8])
+        self.assertEqual(11, pi[S5])
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85"]
         S1, S2, S3, S4, S5, S6, S7, S8, S9 = sommets
         pi, pere = graphe.bellman(S1)
@@ -315,6 +331,22 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(0, pi[S6])
 
     def test_bellman_ford(self):
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
+        S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
+        pi, pere = graphe.bellman_ford(S1)
+        self.assertEqual(S7, pere[S9])
+        self.assertEqual(S1, pere[S3])
+        self.assertEqual(S1, pere[S4])
+        self.assertEqual(6, pi[S10])
+        self.assertEqual(14, pi[S8])
+        self.assertEqual(11, pi[S5])
+        pi, pere = graphe.bellman_ford(S1, plus_long=True)
+        self.assertEqual(S6, pere[S9])
+        self.assertEqual(S5, pere[S3])
+        self.assertEqual(S3, pere[S4])
+        self.assertEqual(24, pi[S10])
+        self.assertEqual(22, pi[S8])
+        self.assertEqual(11, pi[S5])
         graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 4"]
         A, B, C, D, E = sommets
         pi, pere = graphe.bellman_ford(A)
@@ -328,6 +360,22 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(1, pi[E])
 
     def test_ford(self):
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
+        S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
+        pi, pere = graphe.ford(S1)
+        self.assertEqual(S7, pere[S9])
+        self.assertEqual(S1, pere[S3])
+        self.assertEqual(S1, pere[S4])
+        self.assertEqual(6, pi[S10])
+        self.assertEqual(14, pi[S8])
+        self.assertEqual(11, pi[S5])
+        pi, pere = graphe.ford(S1, plus_long=True)
+        self.assertEqual(S6, pere[S9])
+        self.assertEqual(S5, pere[S3])
+        self.assertEqual(S3, pere[S4])
+        self.assertEqual(24, pi[S10])
+        self.assertEqual(22, pi[S8])
+        self.assertEqual(11, pi[S5])
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         pi, pere = graphe.ford(A)
@@ -339,6 +387,22 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(0, pi[D])
 
     def test_floyd_warshall(self):
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
+        S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
+        M, P = graphe.floyd_warshall()
+        self.assertEqual(S7, P[S1,S9])
+        self.assertEqual(S1, P[S1,S3])
+        self.assertEqual(S1, P[S1,S4])
+        self.assertEqual(6, M[S1,S10])
+        self.assertEqual(14, M[S1,S8])
+        self.assertEqual(11, M[S1,S5])
+        M, P = graphe.floyd_warshall(plus_long=True)
+        self.assertEqual(S6, P[S1,S9])
+        self.assertEqual(S5, P[S1,S3])
+        self.assertEqual(S3, P[S1,S4])
+        self.assertEqual(24, M[S1,S10])
+        self.assertEqual(22, M[S1,S8])
+        self.assertEqual(11, M[S1,S5])
         graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 4"]
         A, B, C, D, E = sommets
         M, P = graphe.floyd_warshall()
@@ -353,14 +417,24 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(D, P[B, C])
         self.assertEqual(None, P[C, A])
 
-    def test_plus_court_chemin(self):
+    def test_chemin_optimal(self):
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
+        S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
+        chemin, longueur = graphe.chemin_optimal(S1, S8)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(14, longueur)
+        chemin, longueur = graphe.chemin_optimal(S1, S8, plus_long=True)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(22, longueur)
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
-        chemin, longueur = graphe.plus_court_chemin(A, D)
+        chemin, longueur = graphe.chemin_optimal(A, D)
         self.assertEqual(4, len(chemin))
         self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
         self.assertEqual(0, longueur)
-        chemin, longueur = graphe.plus_court_chemin(B, D)
+        chemin, longueur = graphe.chemin_optimal(B, D)
         self.assertEqual(3, len(chemin))
         self.assertEqual([(B,C), (C,F), (F,D)], chemin)
         self.assertEqual(-4, longueur)

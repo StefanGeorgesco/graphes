@@ -1,3 +1,5 @@
+import operator
+
 class Sommet:
     def __init__(self, nom):
         self.nom = nom
@@ -368,12 +370,13 @@ class GrapheOriente:
             graphe = graphe.sous_graphe(graphe.getSommets() - {sommet})
         return num
 
-    def bellman(self, r):
+    def bellman(self, r, plus_long=False):
         if r not in self._sommets:
             raise Exception("'sommet' doit être un sommet du graphe")
         num = self.numerotation_topolgique()
         if num[r] != 1:
             raise Exception("'sommet' n'est pas racine du graphe")
+        f = max if plus_long else min
         A = {r}
         pi = {r:0}
         pere = {}
@@ -385,7 +388,7 @@ class GrapheOriente:
             return pi, pere
         for j in range(2, n + 1):
             y = list(num.keys())[list(num.values()).index(j)]
-            pi[y] = min([pi[x] + p[x,y] for x in A if x in self.predecesseurs(y)])
+            pi[y] = f([pi[x] + p[x,y] for x in A if x in self.predecesseurs(y)])
             x0 = list(
                     filter(
                         lambda x: (x,y) in p and pi[y] == pi[x] + p[x,y],
@@ -396,9 +399,12 @@ class GrapheOriente:
             A.add(y)
         return pi, pere
 
-    def bellman_ford(self, r):
+    def bellman_ford(self, r, plus_long=False):
         if r not in self._sommets:
             raise Exception("'sommet' doit être un sommet du graphe")
+        f = max if plus_long else min
+        op = operator.__gt__ if plus_long else operator.__lt__
+        limit = -float('inf') if plus_long else float('inf')
         pi = {r:0}
         pere = {}
         p = self.getP()
@@ -409,28 +415,30 @@ class GrapheOriente:
                 pi[sommet] = p[r, sommet]
                 pere[sommet] = r
             else:
-                pi[sommet] = float('inf')
+                pi[sommet] = limit
         if n < 3:
             return pi, pere
         for k in range(1, n - 1):
             for sommet in sommets - {r}:
                 predecesseurs = self.predecesseurs(sommet)
                 if len(predecesseurs) > 0:
-                    mini = min([pi[y] + p[y, sommet] for y in predecesseurs])
+                    val = f([pi[y] + p[y, sommet] for y in predecesseurs])
                     x0 = list(
                         filter(
-                            lambda y: pi[y] + p[y, sommet] == mini,
+                            lambda y: pi[y] + p[y, sommet] == val,
                             predecesseurs
                         )
                     )[0]
-                    if pi[x0] + p[x0, sommet] < pi[sommet]:
+                    if op(pi[x0] + p[x0, sommet], pi[sommet]):
                         pi[sommet] = pi[x0] + p[x0, sommet]
                         pere[sommet] = x0
         return pi, pere
 
-    def ford(self, r):
+    def ford(self, r, plus_long=False):
         if r not in self._sommets:
             raise Exception("'sommet' doit être un sommet du graphe")
+        f = max if plus_long else min
+        limit = -float('inf') if plus_long else float('inf')
         k = 0
         pi = {0: {r: 0}}
         pere = {}
@@ -438,27 +446,27 @@ class GrapheOriente:
         n = self.ordre()
         sommets = self._sommets
         for sommet in sommets - {r}:
-            pi[0].update({sommet: float('inf')})
+            pi[0].update({sommet: limit})
         while True:
             changement = False
             k += 1
             for sommet in sommets:
                 predecesseurs = self.predecesseurs(sommet)
                 if len(predecesseurs) > 0:
-                    mini = min(
+                    val = f(
                         pi[k-1][sommet],
-                        min([pi[k-1][y] + p[y,sommet] for y in predecesseurs])
+                        f([pi[k-1][y] + p[y,sommet] for y in predecesseurs])
                     )
                 else:
-                    mini = pi[k-1][sommet]
+                    val = pi[k-1][sommet]
                 if k in pi.keys():
-                    pi[k].update({sommet: mini})
+                    pi[k].update({sommet: val})
                 else:
-                    pi.update({k: {sommet: mini}})
+                    pi.update({k: {sommet: val}})
                 if pi[k-1][sommet] != pi[k][sommet]:
                     pere[sommet] = list(
                         filter(
-                            lambda y: pi[k-1][y] + p[y,sommet] == mini,
+                            lambda y: pi[k-1][y] + p[y,sommet] == val,
                             self.predecesseurs(sommet)
                         )
                     )[0]
@@ -469,7 +477,10 @@ class GrapheOriente:
             raise Exception(f"Il existe un circuit absorbant accessible depuis {r}")
         return pi[k], pere
 
-    def floyd_warshall(self):
+    def floyd_warshall(self, plus_long=False):
+        f = max if plus_long else min
+        op = operator.__gt__ if plus_long else operator.__lt__
+        limit = -float('inf') if plus_long else float('inf')
         n = len(self._sommets)
         M = {}
         P = {}
@@ -477,22 +488,22 @@ class GrapheOriente:
         for x in sommets:
             for y in sommets:
                 M[x,y] = self._p[x,y] if x != y and (x,y) in self.arcs() \
-                    else min(0, self._p[(x,y)]) if x == y and (x,y) in self.arcs() \
+                    else f(0, self._p[(x,y)]) if x == y and (x,y) in self.arcs() \
                     else 0 if x == y and (x,y) not in self.arcs() \
-                    else float('inf')
+                    else limit
                 P[x,y] = x if x != y and (x,y) in self.arcs() else None
         for k in sommets:
             for i in sommets:
                 for j in sommets:
-                    if M[i,k] + M[k,j] < M[i,j]:
+                    if op(M[i,k] + M[k,j], M[i,j]):
                         M[i,j] = M[i,k] + M[k,j]
                         P[i,j] = P[k,j]
-                    if i == j and M[i,j] < 0:
+                    if i == j and op(M[i,j], 0):
                         raise Exception(f"Il existe un circuit absorbant au niveau de {i}")
         return (M,P)
 
-    def plus_court_chemin(self, sommet1, sommet2):
-        M,P = self.floyd_warshall()
+    def chemin_optimal(self, sommet1, sommet2, plus_long=False):
+        M,P = self.floyd_warshall(plus_long)
 
         def chemin_rec(s1,s2):
             if s1 == s2:
@@ -502,5 +513,5 @@ class GrapheOriente:
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
             raise Exception("les sommets doivent appartenir au graphe")
         if M[sommet1,sommet2] == float('inf'):
-            raise Exception(f"Il n'y a pas de plus court chemin entre {sommet1} et {sommet2}")
+            raise Exception(f"Il n'y a pas de chemin optimal entre {sommet1} et {sommet2}")
         return chemin_rec(sommet1,sommet2), M[sommet1,sommet2]
