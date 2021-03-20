@@ -6,7 +6,8 @@ from graphes_exemples import \
     graphes_orientes, \
     listes_sommets_graphes_orientes
 
-class TestStringMethods(unittest.TestCase):
+
+class TestsGraphes(unittest.TestCase):
 
     def setUp(self) -> None:
         self.graphesNonOrientes = {}
