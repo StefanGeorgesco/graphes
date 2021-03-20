@@ -1,9 +1,9 @@
 class Sommet:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, nom):
+        self.nom = nom
 
     def __repr__(self):
-        return self.name
+        return self.nom
 
 
 class GrapheNonOriente:
