@@ -110,7 +110,7 @@ class GrapheMPM(GrapheOriente):
                 tache.setMarge_libre(
                     min(
                         [
-                            succ.getPlus_tot() - tache.getPlus_tot() - tache.getDuree()
+                            succ.getPlus_tot() - tache.getPlus_tot() - p[tache, succ]
                             for succ in self.successeurs(tache)
                         ]
                     )

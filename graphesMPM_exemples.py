@@ -2,6 +2,34 @@ from ordonnancement import *
 
 donnees = [
     {
+        "nom": "RCP101 - ED3 - Exerice 1",
+        "noms_tâches": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"],
+        "durées" : [70.0, 15.0, 25.0, 10.0, 60.0, 15.0, 70.0, 15.0, 5.0, 5.0, 30.0, 30.0, 40.0, 10.0, 15.0],
+        "liens": [
+            ("A", "C", 20.0),
+            ("None", "D", 50.0),
+            ("B", "E"),
+            ("C", "E"),
+            ("A", "F"),
+            ("D", "F"),
+            ("E", "G"),
+            ("D", "H"),
+            ("F", "I"),
+            ("H", "J"),
+            ("N", "J"),
+            ("I", "K"),
+            ("N", "K"),
+            ("I", "L"),
+            ("M", "L"),
+            ("E", "M"),
+            ("J", "M"),
+            ("F", "N"),
+            ("G", "O"),
+            ("K", "O"),
+            ("L", "O")
+        ]
+    },
+    {
         "nom": "RCP101 - ED3 - Exerice 2",
         "noms_tâches": ["A", "B", "C", "D", "E", "F"],
         "durées" : [2.0, 2.0, 2.0, 4.0, 1.0, 2.0],
@@ -32,5 +60,11 @@ for jeu_donnees in donnees:
             p.append((taches[noms_taches.index(nom_t1)], taches[noms_taches.index(nom_t2)]))
         else:
             nom_t1, nom_t2, duree = description_lien
-            p.append((taches[noms_taches.index(nom_t1)], taches[noms_taches.index(nom_t2)], duree))
+            p.append(
+                (
+                    None if nom_t1 == "None" else taches[noms_taches.index(nom_t1)],
+                    taches[noms_taches.index(nom_t2)],
+                    duree
+                )
+            )
     graphes_MPM[nom] = GrapheMPM(*taches, prec=p, nom=nom)
