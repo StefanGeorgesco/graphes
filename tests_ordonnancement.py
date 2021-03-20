@@ -1,5 +1,4 @@
 import unittest
-from ordonnancement import *
 from graphesMPM_exemples import graphes_MPM, listes_taches
 
 
