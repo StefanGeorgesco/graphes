@@ -1,5 +1,6 @@
 from graphes import GrapheOriente, Sommet
 
+
 class Tache(Sommet):
     def __init__(self, nom: str, duree: float):
         super().__init__(nom)
@@ -83,6 +84,16 @@ class GrapheMPM(GrapheOriente):
 
     def __repr__(self) -> str:
         return f"GrapheMPM {self._nom} ({self._sommets}, {self._p})"
+
+    def __str__(self) -> str:
+        s = f"GrapheMPM {self._nom}\nTaches :\n"
+        for tache in self.getTaches():
+            s += f"\t{tache}\n"
+        s += "Liens :\n"
+        p = self.getP()
+        for lien in p.keys():
+            s += f"\t{lien}: {p[lien]}\n"
+        return s
 
     def getTaches(self) -> list:
         return self.getSommets()

@@ -1,5 +1,6 @@
 import operator
 
+
 class Sommet:
     def __init__(self, nom: str):
         self.nom = nom
