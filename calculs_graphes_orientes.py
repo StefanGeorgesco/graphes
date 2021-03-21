@@ -34,6 +34,7 @@ if __name__ == '__main__':
         Matrices M et P de Floyd-Warshall
         """
 
+
         def afficheMatrice(sommets, M):
             M = dict(M)
             print("\t" + "".ljust(5), end="")
@@ -47,8 +48,9 @@ if __name__ == '__main__':
                 print()
             print()
 
+
         try:
-            M,P = graphe.floyd_warshall()
+            M, P = graphe.floyd_warshall()
             print("\tMatrice M de Floyd-Warshall :")
             afficheMatrice(sommets, M)
             print("\tMatrice P de Floyd-Warshall :")
@@ -70,4 +72,5 @@ if __name__ == '__main__':
                 print("\t" + ("distance du chemin jusqu'à " + repr(y)).ljust(30), " :", d)
             except Exception as e:
                 print("\t" + ("chemin jusqu'à " + repr(y)).ljust(30), " : pas de plus court chemin : " + repr(e))
-                print("\t" + ("distance du chemin jusqu'à " + repr(y)).ljust(30), " : pas de plus court chemin : " + repr(e))
+                print("\t" + ("distance du chemin jusqu'à " + repr(y)).ljust(30),
+                      " : pas de plus court chemin : " + repr(e))

@@ -35,7 +35,7 @@ class TestsOrdonnancement(unittest.TestCase):
         self.assertEqual(1.0, E.marge_totale())
         self.assertEqual(0.0, F.marge_totale())
         taches_critiques = grapheMPM.taches_critiques()
-        self.assertEqual({A,D,F}, set(taches_critiques))
+        self.assertEqual({A, D, F}, set(taches_critiques))
         self.assertEqual(0.0, A.getMarge_libre())
         self.assertEqual(4.0, B.getMarge_libre())
         self.assertEqual(4.0, C.getMarge_libre())
@@ -45,7 +45,7 @@ class TestsOrdonnancement(unittest.TestCase):
 
     def test_calcul_dates_avec_contraintes_debut_a_debut(self):
         grapheMPM, taches = self.graphesMPM["RCP101 - ED3 - Exerice 1"]
-        A,B,C,D,E,F,G,H,I,J,K,L,M,N,O = taches
+        A, B, C, D, E, F, G, H, I, J, K, L, M, N, O = taches
         self.assertEqual(0.0, grapheMPM.getTache_debut().getPlus_tot())
         self.assertEqual(0.0, A.getPlus_tot())
         self.assertEqual(0.0, B.getPlus_tot())

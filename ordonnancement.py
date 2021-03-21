@@ -53,11 +53,11 @@ class GrapheMPM(GrapheOriente):
             if not all(
                     map(
                         lambda x: isinstance(x, tuple) and \
-                            x[1] in taches and \
-                            (len(x) == 2 and x[0] in taches or
-                             len(x) == 3 and (x[0] in taches or x[0] is None) and
-                             isinstance(x[2], float)),
-                            prec
+                                  x[1] in taches and \
+                                  (len(x) == 2 and x[0] in taches or
+                                   len(x) == 3 and (x[0] in taches or x[0] is None) and
+                                   isinstance(x[2], float)),
+                        prec
                     )
             ):
                 raise Exception(f"Les éléments de {prec} doivent être du type \
@@ -68,16 +68,16 @@ class GrapheMPM(GrapheOriente):
             liste_taches.append(self._tache_fin)
             for x in prec:
                 if len(x) == 2:
-                    t1,t2 = x
+                    t1, t2 = x
                     p.update({(t1, t2): t1.getDuree()})
                 else:
-                    t1,t2,d = x
+                    t1, t2, d = x
                     if t1 is None:
                         t1 = self._tache_debut
-                    p.update({(t1,t2): d})
-            for tache in set(taches) - set(map(lambda x: x[1],prec)):
+                    p.update({(t1, t2): d})
+            for tache in set(taches) - set(map(lambda x: x[1], prec)):
                 p.update({(self._tache_debut, tache): 0.0})
-            for tache in set(taches) - set(map(lambda x: x[0],prec)):
+            for tache in set(taches) - set(map(lambda x: x[0], prec)):
                 p.update({(tache, self._tache_fin): tache.getDuree()})
         super().__init__(*liste_taches, p=p, nom=nom, commentaire=commentaire)
         self._calculer_dates()
@@ -110,8 +110,8 @@ class GrapheMPM(GrapheOriente):
             tache.setPlus_tot(pi[tache])
         p = self.getP()
         p2 = {}
-        for t1,t2 in p.keys():
-            p2.update({(t2,t1): p[(t1,t2)]})
+        for t1, t2 in p.keys():
+            p2.update({(t2, t1): p[(t1, t2)]})
         graphe = GrapheOriente(*self._sommets, p=p2)
         pi, _ = graphe.bellman(self._tache_fin, plus_long=True)
         date_de_fin = self._tache_fin.getPlus_tot()
@@ -137,6 +137,5 @@ class GrapheMPM(GrapheOriente):
                     lambda tache: tache.marge_totale() == 0.0,
                     self.getTaches()
                 )
-            ) - {self._tache_debut,self._tache_fin}
+            ) - {self._tache_debut, self._tache_fin}
         )
-

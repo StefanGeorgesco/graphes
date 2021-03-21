@@ -27,15 +27,15 @@ class TestsGraphes(unittest.TestCase):
         s2 = Sommet("2")
         s3 = Sommet("3")
         s4 = Sommet("4")
-        graphe1 = GrapheNonOriente(s1, s2, s3, aretes=[{s1,s2}, {s1,s3}])
+        graphe1 = GrapheNonOriente(s1, s2, s3, aretes=[{s1, s2}, {s1, s3}])
         self.assertEqual(3, graphe1.ordre())
         self.assertEqual(2, graphe1.taille())
         graphe2 = GrapheNonOriente(s1, s2, s3, s4)
-        graphe2.lier(s1,s2)
-        graphe2.lier(s1,s3)
-        graphe2.lier(s2,s3)
-        graphe2.lier(s2,s4)
-        graphe2.lier(s3,s4)
+        graphe2.lier(s1, s2)
+        graphe2.lier(s1, s3)
+        graphe2.lier(s2, s3)
+        graphe2.lier(s2, s4)
+        graphe2.lier(s3, s4)
         self.assertEqual(4, graphe2.ordre())
         self.assertEqual(5, graphe2.taille())
 
@@ -53,9 +53,9 @@ class TestsGraphes(unittest.TestCase):
         self.assertTrue({C, D} in aretes)
         self.assertTrue({D, E} in aretes)
         self.assertTrue({D, F} in aretes)
-        self.assertFalse({E,F} in aretes)
-        self.assertFalse({B,D} in aretes)
-        self.assertFalse({B,C} in aretes)
+        self.assertFalse({E, F} in aretes)
+        self.assertFalse({B, D} in aretes)
+        self.assertFalse({B, C} in aretes)
         self.assertFalse({A, D} in aretes)
         self.assertFalse({A, E} in aretes)
 
@@ -77,9 +77,9 @@ class TestsGraphes(unittest.TestCase):
         self.assertTrue({C, D} in aretes)
         self.assertTrue({D, E} in aretes)
         self.assertTrue({D, F} in aretes)
-        self.assertFalse({E,F} in aretes)
-        self.assertFalse({B,D} in aretes)
-        self.assertFalse({B,C} in aretes)
+        self.assertFalse({E, F} in aretes)
+        self.assertFalse({B, D} in aretes)
+        self.assertFalse({B, C} in aretes)
         self.assertFalse({A, D} in aretes)
         self.assertFalse({A, E} in aretes)
 
@@ -90,20 +90,20 @@ class TestsGraphes(unittest.TestCase):
         self.assertEqual(5, len(sous_graphe.getSommets()))
         self.assertEqual({A, B, C, E, F}, sous_graphe.getSommets())
         self.assertEqual(5, len(sous_graphe.getAretes()))
-        self.assertEqual([{A,B}, {A,C}, {A,F}, {B,E}, {C,E}], sous_graphe.getAretes())
+        self.assertEqual([{A, B}, {A, C}, {A, F}, {B, E}, {C, E}], sous_graphe.getAretes())
 
     def test_graphe_partiel_graphe_non_oriente(self):
         graphe, sommets = self.graphesNonOrientes["Exemple de graphe non orienté"]
         A, B, C, D, E, F = sommets
-        graphe_partiel = graphe.graphe_partiel([{A,C}, {A,F}, {B,E}, {C,D}, {D,E}])
+        graphe_partiel = graphe.graphe_partiel([{A, C}, {A, F}, {B, E}, {C, D}, {D, E}])
         self.assertEqual(6, len(graphe_partiel.getSommets()))
         self.assertEqual({A, B, C, D, E, F}, graphe_partiel.getSommets())
         self.assertEqual(5, len(graphe_partiel.getAretes()))
-        self.assertTrue({A,C} in graphe_partiel.getAretes())
-        self.assertTrue({A,F} in graphe_partiel.getAretes())
-        self.assertTrue({B,E} in graphe_partiel.getAretes())
-        self.assertTrue({C,D} in graphe_partiel.getAretes())
-        self.assertTrue({D,E} in graphe_partiel.getAretes())
+        self.assertTrue({A, C} in graphe_partiel.getAretes())
+        self.assertTrue({A, F} in graphe_partiel.getAretes())
+        self.assertTrue({B, E} in graphe_partiel.getAretes())
+        self.assertTrue({C, D} in graphe_partiel.getAretes())
+        self.assertTrue({D, E} in graphe_partiel.getAretes())
 
     def test_clique_et_est_clique(self):
         c = GrapheNonOriente.clique(5)
@@ -127,15 +127,15 @@ class TestsGraphes(unittest.TestCase):
         s2 = Sommet("2")
         s3 = Sommet("3")
         s4 = Sommet("4")
-        graphe1 = GrapheOriente(s1, s2, s3, p={(s1, s2):2, (s1, s3):5})
+        graphe1 = GrapheOriente(s1, s2, s3, p={(s1, s2): 2, (s1, s3): 5})
         self.assertEqual(3, graphe1.ordre())
         self.assertEqual(2, graphe1.taille())
         graphe2 = GrapheOriente(s1, s2, s3, s4)
-        graphe2.lier(s1,s2,5)
-        graphe2.lier(s1,s3,3)
-        graphe2.lier(s2,s3,1)
-        graphe2.lier(s2,s4,-1)
-        graphe2.lier(s3,s4,0)
+        graphe2.lier(s1, s2, 5)
+        graphe2.lier(s1, s3, 3)
+        graphe2.lier(s2, s3, 1)
+        graphe2.lier(s2, s4, -1)
+        graphe2.lier(s3, s4, 0)
         self.assertEqual(4, graphe2.ordre())
         self.assertEqual(5, graphe2.taille())
 
@@ -190,24 +190,24 @@ class TestsGraphes(unittest.TestCase):
         self.assertEqual(5, len(sous_graphe.getSommets()))
         self.assertEqual({A, B, C, E, F}, sous_graphe.getSommets())
         self.assertEqual(6, len(sous_graphe.arcs()))
-        self.assertEqual({(A,B), (A,E), (B,E), (B,C), (F,E), (C,F)}, sous_graphe.arcs())
+        self.assertEqual({(A, B), (A, E), (B, E), (B, C), (F, E), (C, F)}, sous_graphe.arcs())
 
     def test_graphe_partiel_graphe_oriente(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
-        graphe_partiel = graphe.graphe_partiel({(A,B), (B,C), (C,F), (F,E), (F,D)})
+        graphe_partiel = graphe.graphe_partiel({(A, B), (B, C), (C, F), (F, E), (F, D)})
         self.assertEqual(6, len(graphe_partiel.getSommets()))
         self.assertEqual({A, B, C, D, E, F}, graphe_partiel.getSommets())
         self.assertEqual(5, len(graphe_partiel.arcs()))
-        self.assertEqual({(A,B), (B,C), (C,F), (F,E), (F,D)}, graphe_partiel.arcs())
+        self.assertEqual({(A, B), (B, C), (C, F), (F, E), (F, D)}, graphe_partiel.arcs())
 
     def test_successeurs(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
-        self.assertEqual({B,E}, graphe.successeurs(A))
+        self.assertEqual({B, E}, graphe.successeurs(A))
         self.assertEqual({C, E}, graphe.successeurs(B))
         self.assertEqual({F}, graphe.successeurs(C))
-        self.assertEqual({B,C}, graphe.successeurs(D))
+        self.assertEqual({B, C}, graphe.successeurs(D))
         self.assertEqual({D}, graphe.successeurs(E))
         self.assertEqual({D, E}, graphe.successeurs(F))
 
@@ -215,10 +215,10 @@ class TestsGraphes(unittest.TestCase):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         self.assertEqual(set(), graphe.predecesseurs(A))
-        self.assertEqual({A,D}, graphe.predecesseurs(B))
-        self.assertEqual({B,D}, graphe.predecesseurs(C))
-        self.assertEqual({E,F}, graphe.predecesseurs(D))
-        self.assertEqual({A,B,F}, graphe.predecesseurs(E))
+        self.assertEqual({A, D}, graphe.predecesseurs(B))
+        self.assertEqual({B, D}, graphe.predecesseurs(C))
+        self.assertEqual({E, F}, graphe.predecesseurs(D))
+        self.assertEqual({A, B, F}, graphe.predecesseurs(E))
         self.assertEqual({C}, graphe.predecesseurs(F))
 
     def test_descendants(self):
@@ -240,22 +240,22 @@ class TestsGraphes(unittest.TestCase):
     def test_cfc0(self):
         graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 1"]
         A, B, C, D, E, F = sommets
-        self.assertEqual({D,C}, graphe.cfc(D))
-        self.assertEqual({A,B,E,F}, graphe.cfc(B))
+        self.assertEqual({D, C}, graphe.cfc(D))
+        self.assertEqual({A, B, E, F}, graphe.cfc(B))
 
     def test_cfcs0(self):
         graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 1"]
         A, B, C, D, E, F = sommets
         cfcs = graphe.cfcs()
         self.assertEqual(2, len(cfcs))
-        self.assertTrue({D,C} in cfcs)
-        self.assertTrue({A,B,E,F} in cfcs)
+        self.assertTrue({D, C} in cfcs)
+        self.assertTrue({A, B, E, F} in cfcs)
         self.assertFalse(graphe.estFortementConnexe())
 
     def test_cfc1(self):
         graphe, sommets = self.graphesOrientes["RCP101 - ED1 - Exercice 2 - Question 1"]
         Ap, Am, Bp, Bm, Cp, Cm, Dp, Dm, Ep, Em = sommets
-        self.assertEqual({Bm,Am, Dp, Cp}, graphe.cfc(Bm))
+        self.assertEqual({Bm, Am, Dp, Cp}, graphe.cfc(Bm))
         self.assertEqual({Bp, Ap, Dm, Cm}, graphe.cfc(Bp))
         self.assertEqual({Ep}, graphe.cfc(Ep))
         self.assertEqual({Em}, graphe.cfc(Em))
@@ -265,7 +265,7 @@ class TestsGraphes(unittest.TestCase):
         Ap, Am, Bp, Bm, Cp, Cm, Dp, Dm, Ep, Em = sommets
         cfcs = graphe.cfcs()
         self.assertEqual(4, len(cfcs))
-        self.assertTrue({Bm,Am, Dp, Cp} in cfcs)
+        self.assertTrue({Bm, Am, Dp, Cp} in cfcs)
         self.assertTrue({Bp, Ap, Dm, Cm} in cfcs)
         self.assertTrue({Ep} in cfcs)
         self.assertTrue({Em} in cfcs)
@@ -291,8 +291,8 @@ class TestsGraphes(unittest.TestCase):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74"]
         S1, S2, S3, S4, S5, S6, S7, S8 = sommets
         pi, pere = graphe.dijkstra(S1)
-        self.assertEqual([(S1, S3), (S3, S4), (S4, S2)], self.chemin(pere, S1,S2))
-        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], self.chemin(pere, S1,S8))
+        self.assertEqual([(S1, S3), (S3, S4), (S4, S2)], self.chemin(pere, S1, S2))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], self.chemin(pere, S1, S8))
         self.assertEqual(5, pi[S8])
         self.assertEqual(4, pi[S7])
         self.assertEqual(3, pi[S6])
@@ -302,7 +302,7 @@ class TestsGraphes(unittest.TestCase):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 85"]
         num = graphe.numerotation_topolgique()
         self.assertEqual(set(sommets), set(num.keys()))
-        self.assertEqual({1,2,3,4,5,6,7,8,9}, set(num.values()))
+        self.assertEqual({1, 2, 3, 4, 5, 6, 7, 8, 9}, set(num.values()))
 
     def test_bellman(self):
         graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
@@ -325,7 +325,7 @@ class TestsGraphes(unittest.TestCase):
         S1, S2, S3, S4, S5, S6, S7, S8, S9 = sommets
         pi, pere = graphe.bellman(S1)
         self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S6), (S6, S9)], self.chemin(pere, S1, S9))
-        self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S8)], self.chemin(pere, S1,S8))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S7), (S7, S8)], self.chemin(pere, S1, S8))
         self.assertEqual(1, pi[S9])
         self.assertEqual(-2, pi[S8])
         self.assertEqual(1, pi[S7])
@@ -382,7 +382,7 @@ class TestsGraphes(unittest.TestCase):
         pi, pere = graphe.ford(A)
         self.assertEqual([(A, B), (B, C), (C, F)], self.chemin(pere, A, F))
         self.assertEqual(-1, pi[F])
-        self.assertEqual([(A,B), (B, E)], self.chemin(pere, A, E))
+        self.assertEqual([(A, B), (B, E)], self.chemin(pere, A, E))
         self.assertEqual(2, pi[E])
         self.assertEqual([(A, B), (B, C), (C, F), (F, D)], self.chemin(pere, A, D))
         self.assertEqual(0, pi[D])
@@ -391,19 +391,19 @@ class TestsGraphes(unittest.TestCase):
         graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
         S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
         M, P = graphe.floyd_warshall()
-        self.assertEqual(S7, P[S1,S9])
-        self.assertEqual(S1, P[S1,S3])
-        self.assertEqual(S1, P[S1,S4])
-        self.assertEqual(6, M[S1,S10])
-        self.assertEqual(14, M[S1,S8])
-        self.assertEqual(11, M[S1,S5])
+        self.assertEqual(S7, P[S1, S9])
+        self.assertEqual(S1, P[S1, S3])
+        self.assertEqual(S1, P[S1, S4])
+        self.assertEqual(6, M[S1, S10])
+        self.assertEqual(14, M[S1, S8])
+        self.assertEqual(11, M[S1, S5])
         M, P = graphe.floyd_warshall(plus_long=True)
-        self.assertEqual(S6, P[S1,S9])
-        self.assertEqual(S5, P[S1,S3])
-        self.assertEqual(S3, P[S1,S4])
-        self.assertEqual(24, M[S1,S10])
-        self.assertEqual(22, M[S1,S8])
-        self.assertEqual(11, M[S1,S5])
+        self.assertEqual(S6, P[S1, S9])
+        self.assertEqual(S5, P[S1, S3])
+        self.assertEqual(S3, P[S1, S4])
+        self.assertEqual(24, M[S1, S10])
+        self.assertEqual(22, M[S1, S8])
+        self.assertEqual(11, M[S1, S5])
         graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 4"]
         A, B, C, D, E = sommets
         M, P = graphe.floyd_warshall()
@@ -423,21 +423,21 @@ class TestsGraphes(unittest.TestCase):
         S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
         chemin, longueur = graphe.chemin_optimal(S1, S8)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(14, longueur)
         chemin, longueur = graphe.chemin_optimal(S1, S8, plus_long=True)
         self.assertEqual(5, len(chemin))
-        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S2), (S2, S5), (S5, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(22, longueur)
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         chemin, longueur = graphe.chemin_optimal(A, D)
         self.assertEqual(4, len(chemin))
-        self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(A, B), (B, C), (C, F), (F, D)], chemin)
         self.assertEqual(0, longueur)
         chemin, longueur = graphe.chemin_optimal(B, D)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(B, C), (C, F), (F, D)], chemin)
         self.assertEqual(-4, longueur)
 
     def test_classe_chemin_optimal(self):
@@ -446,38 +446,38 @@ class TestsGraphes(unittest.TestCase):
 
         chemin, longueur = CheminOptimal().calculer(graphe, S1, S8)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(14, longueur)
         chemin, longueur = CheminOptimal().calculer(graphe, S1, S8, plus_long=True)
         self.assertEqual(5, len(chemin))
-        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S2), (S2, S5), (S5, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(22, longueur)
 
         chemin, longueur = CheminOptimal(Bellman()).calculer(graphe, S1, S8)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(14, longueur)
         chemin, longueur = CheminOptimal(Bellman()).calculer(graphe, S1, S8, plus_long=True)
         self.assertEqual(5, len(chemin))
-        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S2), (S2, S5), (S5, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(22, longueur)
 
         chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, S1, S8)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(14, longueur)
         chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, S1, S8, plus_long=True)
         self.assertEqual(5, len(chemin))
-        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S2), (S2, S5), (S5, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(22, longueur)
 
         chemin, longueur = CheminOptimal(Ford()).calculer(graphe, S1, S8)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(14, longueur)
         chemin, longueur = CheminOptimal(Ford()).calculer(graphe, S1, S8, plus_long=True)
         self.assertEqual(5, len(chemin))
-        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual([(S1, S2), (S2, S5), (S5, S3), (S3, S6), (S6, S8)], chemin)
         self.assertEqual(22, longueur)
 
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
@@ -485,29 +485,29 @@ class TestsGraphes(unittest.TestCase):
 
         chemin, longueur = CheminOptimal().calculer(graphe, A, D)
         self.assertEqual(4, len(chemin))
-        self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(A, B), (B, C), (C, F), (F, D)], chemin)
         self.assertEqual(0, longueur)
         chemin, longueur = CheminOptimal().calculer(graphe, B, D)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(B, C), (C, F), (F, D)], chemin)
         self.assertEqual(-4, longueur)
 
         chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, A, D)
         self.assertEqual(4, len(chemin))
-        self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(A, B), (B, C), (C, F), (F, D)], chemin)
         self.assertEqual(0, longueur)
         chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, B, D)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(B, C), (C, F), (F, D)], chemin)
         self.assertEqual(-4, longueur)
 
         chemin, longueur = CheminOptimal(Ford()).calculer(graphe, A, D)
         self.assertEqual(4, len(chemin))
-        self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(A, B), (B, C), (C, F), (F, D)], chemin)
         self.assertEqual(0, longueur)
         chemin, longueur = CheminOptimal(Ford()).calculer(graphe, B, D)
         self.assertEqual(3, len(chemin))
-        self.assertEqual([(B,C), (C,F), (F,D)], chemin)
+        self.assertEqual([(B, C), (C, F), (F, D)], chemin)
         self.assertEqual(-4, longueur)
 
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74"]

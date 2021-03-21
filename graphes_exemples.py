@@ -3,7 +3,8 @@ from graphes import *
 donnees_graphes_orientes = [
     {
         "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), pages 25/27/33",
-        "noms_sommets": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"],
+        "noms_sommets": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17",
+                         "18", "19"],
         "liens": [
             ("1", "2", 1),
             ("1", "5", 1),
@@ -148,7 +149,7 @@ donnees_graphes_orientes = [
             ("j", "i", -1),
             ("k", "j", -2),
             ("l", "k", -1),
-            ("fin", "l", -2+12)
+            ("fin", "l", -2 + 12)
         ],
         "sommet_départ": "fin"
     },
@@ -234,30 +235,30 @@ donnees_graphes_orientes = [
             "T6"
         ],
         "liens": [
-            ("T1A0", "T2A0", 6000+13000),
+            ("T1A0", "T2A0", 6000 + 13000),
             ("T1A0", "T2A1", 6000),
-            ("T2A0", "T3A0", 6000+13000),
+            ("T2A0", "T3A0", 6000 + 13000),
             ("T2A0", "T3A1", 6000),
-            ("T2A1", "T3A0", 10000+25000),
+            ("T2A1", "T3A0", 10000 + 25000),
             ("T2A1", "T3A2", 10000),
-            ("T3A0", "T4A0", 6000+13000),
+            ("T3A0", "T4A0", 6000 + 13000),
             ("T3A0", "T4A1", 6000),
-            ("T3A1", "T4A0", 10000+25000),
+            ("T3A1", "T4A0", 10000 + 25000),
             ("T3A1", "T4A2", 10000),
             ("T3A2", "T4A0", 15000 + 45000),
             ("T3A2", "T4A3", 15000),
-            ("T4A0", "T5A0", 6000+13000),
+            ("T4A0", "T5A0", 6000 + 13000),
             ("T4A0", "T5A1", 6000),
-            ("T4A1", "T5A0", 10000+25000),
+            ("T4A1", "T5A0", 10000 + 25000),
             ("T4A1", "T5A2", 10000),
             ("T4A2", "T5A0", 15000 + 45000),
             ("T4A2", "T5A3", 15000),
             ("T4A3", "T5A0", 23000 + 47500),
             ("T4A3", "T5A4", 23000),
-            ("T5A0", "T6", 6000-37000),
-            ("T5A1", "T6", 10000-25000),
-            ("T5A2", "T6", 15000-5000),
-            ("T5A3", "T6", 23000-2500),
+            ("T5A0", "T6", 6000 - 37000),
+            ("T5A1", "T6", 10000 - 25000),
+            ("T5A2", "T6", 15000 - 5000),
+            ("T5A3", "T6", 23000 - 2500),
             ("T5A4", "T6", 35000)
         ],
         "sommet_départ": "T1A0"
@@ -358,7 +359,6 @@ donnees_graphes_non_orientes = [
     }
 ]
 
-
 graphes_orientes = {}
 listes_sommets_graphes_orientes = {}
 sommets_depart_graphes_orientes = {}
@@ -386,4 +386,3 @@ for jeu_donnees_graphes_non_orientes in donnees_graphes_non_orientes:
     for nom1, nom2 in jeu_donnees_graphes_non_orientes["liens"]:
         graphe.lier(sommets[noms_sommets.index(nom1)], sommets[noms_sommets.index(nom2)])
     graphes_non_orientes[nom] = graphe
-
