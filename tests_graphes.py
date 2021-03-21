@@ -1,5 +1,5 @@
 import unittest
-from graphes import Sommet, GrapheNonOriente, GrapheOriente
+from graphes import *
 from graphes_exemples import \
     graphes_non_orientes, \
     listes_sommets_graphes_non_orientes, \
@@ -439,6 +439,99 @@ class TestsGraphes(unittest.TestCase):
         self.assertEqual(3, len(chemin))
         self.assertEqual([(B,C), (C,F), (F,D)], chemin)
         self.assertEqual(-4, longueur)
+
+    def test_classe_chemin_optimal(self):
+        graphe, sommets = self.graphesOrientes["RCP101 - ED2 - Exercice 3 questions 1 et 2"]
+        S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 = sommets
+
+        chemin, longueur = CheminOptimal().calculer(graphe, S1, S8)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(14, longueur)
+        chemin, longueur = CheminOptimal().calculer(graphe, S1, S8, plus_long=True)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(22, longueur)
+
+        chemin, longueur = CheminOptimal(Bellman()).calculer(graphe, S1, S8)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(14, longueur)
+        chemin, longueur = CheminOptimal(Bellman()).calculer(graphe, S1, S8, plus_long=True)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(22, longueur)
+
+        chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, S1, S8)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(14, longueur)
+        chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, S1, S8, plus_long=True)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(22, longueur)
+
+        chemin, longueur = CheminOptimal(Ford()).calculer(graphe, S1, S8)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(S1,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(14, longueur)
+        chemin, longueur = CheminOptimal(Ford()).calculer(graphe, S1, S8, plus_long=True)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1,S2), (S2,S5), (S5,S3), (S3,S6), (S6,S8)], chemin)
+        self.assertEqual(22, longueur)
+
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
+        A, B, C, D, E, F = sommets
+
+        chemin, longueur = CheminOptimal().calculer(graphe, A, D)
+        self.assertEqual(4, len(chemin))
+        self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
+        self.assertEqual(0, longueur)
+        chemin, longueur = CheminOptimal().calculer(graphe, B, D)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(B,C), (C,F), (F,D)], chemin)
+        self.assertEqual(-4, longueur)
+
+        chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, A, D)
+        self.assertEqual(4, len(chemin))
+        self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
+        self.assertEqual(0, longueur)
+        chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, B, D)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(B,C), (C,F), (F,D)], chemin)
+        self.assertEqual(-4, longueur)
+
+        chemin, longueur = CheminOptimal(Ford()).calculer(graphe, A, D)
+        self.assertEqual(4, len(chemin))
+        self.assertEqual([(A,B), (B,C), (C,F), (F,D)], chemin)
+        self.assertEqual(0, longueur)
+        chemin, longueur = CheminOptimal(Ford()).calculer(graphe, B, D)
+        self.assertEqual(3, len(chemin))
+        self.assertEqual([(B,C), (C,F), (F,D)], chemin)
+        self.assertEqual(-4, longueur)
+
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 74"]
+        S1, S2, S3, S4, S5, S6, S7, S8 = sommets
+
+        chemin, longueur = CheminOptimal().calculer(graphe, S1, S8)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], chemin)
+        self.assertEqual(5, longueur)
+
+        chemin, longueur = CheminOptimal(Dijkstra()).calculer(graphe, S1, S8)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], chemin)
+        self.assertEqual(5, longueur)
+
+        chemin, longueur = CheminOptimal(BellmanFord()).calculer(graphe, S1, S8)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], chemin)
+        self.assertEqual(5, longueur)
+
+        chemin, longueur = CheminOptimal(Ford()).calculer(graphe, S1, S8)
+        self.assertEqual(5, len(chemin))
+        self.assertEqual([(S1, S3), (S3, S5), (S5, S6), (S6, S7), (S7, S8)], chemin)
+        self.assertEqual(5, longueur)
 
 
 if __name__ == '__main__':

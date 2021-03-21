@@ -516,3 +516,52 @@ class GrapheOriente:
         if M[sommet1,sommet2] == float('inf'):
             raise Exception(f"Il n'y a pas de chemin optimal entre {sommet1} et {sommet2}")
         return chemin_rec(sommet1,sommet2), M[sommet1,sommet2]
+
+
+class Algorithme:
+    def calculer_pi_pere(self, graphe: GrapheOriente, racine: Sommet, plus_long=False) -> (dict, dict):
+        return {}, {}
+
+class Dijkstra(Algorithme):
+    def calculer_pi_pere(self, graphe: GrapheOriente, racine: Sommet, plus_long=False) -> (dict, dict):
+        if plus_long:
+            raise Exception("L'algorithme de Dijkstra ne calcule que des plus courts chemins")
+        return graphe.dijkstra(racine)
+
+class Bellman(Algorithme):
+    def calculer_pi_pere(self, graphe: GrapheOriente, racine: Sommet, plus_long=False) -> (dict, dict):
+        return graphe.bellman(racine, plus_long=plus_long)
+
+class BellmanFord(Algorithme):
+    def calculer_pi_pere(self, graphe: GrapheOriente, racine: Sommet, plus_long=False) -> (dict, dict):
+        return graphe.bellman_ford(racine, plus_long=plus_long)
+
+class Ford(Algorithme):
+    def calculer_pi_pere(self, graphe: GrapheOriente, racine: Sommet, plus_long=False) -> (dict, dict):
+        return graphe.ford(racine, plus_long=plus_long)
+
+class FloydWarshall(Algorithme):
+    def calculer_pi_pere(self, graphe: GrapheOriente, racine: Sommet, plus_long=False) -> (dict, dict):
+        M, P = graphe.floyd_warshall(plus_long=plus_long)
+        pi, pere = {}, {}
+        for sommet in graphe.getSommets() - {racine}:
+            pi.update({sommet: M[racine,sommet]})
+            pere.update({sommet: P[racine,sommet]})
+        return pi, pere
+
+class CheminOptimal:
+    def __init__(self, algorithme: Algorithme = FloydWarshall()):
+        self._algorithme = algorithme
+
+    def calculer(self, graphe: GrapheOriente, sommet1: Sommet, sommet2: Sommet, plus_long=False):
+        if sommet1 not in graphe.getSommets() or sommet2 not in graphe.getSommets():
+            raise Exception("Les sommets doivent appartenir au graphe")
+        pi, pere = self._algorithme.calculer_pi_pere(graphe, sommet1, plus_long=plus_long)
+        def chemin(s1, s2):
+            if s1 == s2:
+                return []
+            else:
+                return chemin(s1, pere[s2]) + [(pere[s2], s2)]
+        if pi[sommet2] == float('inf'):
+            raise Exception(f"Il n'y a pas de chemin optimal entre {sommet1} et {sommet2}")
+        return chemin(sommet1,sommet2), pi[sommet2]
