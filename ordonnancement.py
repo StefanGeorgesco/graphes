@@ -62,8 +62,8 @@ class GrapheMPM(GrapheOriente):
             ):
                 raise Exception(f"Les éléments de {prec} doivent être du type \
 (t1,t2) ou (t1,t2,durée), où t1,t2 sont dans {taches} et durée est un flottant")
-            self._tache_debut = Tache("Début", 0.0)
-            self._tache_fin = Tache("Fin", 0.0)
+            self._tache_debut = Tache(".Début", 0.0)
+            self._tache_fin = Tache(".Fin", 0.0)
             liste_taches.append(self._tache_debut)
             liste_taches.append(self._tache_fin)
             for x in prec:
@@ -83,11 +83,11 @@ class GrapheMPM(GrapheOriente):
         self._calculer_dates()
 
     def __repr__(self) -> str:
-        return f"GrapheMPM {self._nom} ({self._sommets}, {self._p})"
+        return f"GrapheMPM {self._nom} ({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._p})"
 
     def __str__(self) -> str:
         s = f"GrapheMPM {self._nom}\nTaches :\n"
-        for tache in self.getTaches():
+        for tache in sorted(list(self.getTaches()), key=Tache.__repr__):
             s += f"\t{tache}\n"
         s += "Liens :\n"
         p = self.getP()
@@ -131,11 +131,14 @@ class GrapheMPM(GrapheOriente):
         return self._tache_fin.getPlus_tot()
 
     def taches_critiques(self) -> list:
-        return list(
-            set(
-                filter(
-                    lambda tache: tache.marge_totale() == 0.0,
-                    self.getTaches()
-                )
-            ) - {self._tache_debut, self._tache_fin}
+        return sorted(
+            list(
+                set(
+                    filter(
+                        lambda tache: tache.marge_totale() == 0.0,
+                        self.getTaches()
+                    )
+                ) - {self._tache_debut, self._tache_fin}
+            ),
+            key=Tache.__repr__
         )
