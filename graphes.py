@@ -30,7 +30,8 @@ class GrapheNonOriente:
         self.setCommentaire(commentaire)
 
     def __repr__(self):
-        return f"GrapheNonOrienté {self._nom} ({self._sommets}, {self._aretes})"
+        return f"GrapheNonOrienté {self._nom} \
+({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._aretes})"
 
     def lier(self, sommet1, sommet2):
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
@@ -154,7 +155,8 @@ class GrapheOriente:
         self.setCommentaire(commentaire)
 
     def __repr__(self):
-        return f"GrapheOrienté {self._nom} ({self._sommets}, {self._p})"
+        return f"GrapheOrienté {self._nom} \
+({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._p})"
 
     def lier(self, sommet1, sommet2, poids):
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
