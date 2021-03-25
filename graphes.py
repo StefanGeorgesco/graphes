@@ -43,7 +43,7 @@ class GrapheNonOriente:
         return set(self._sommets)
 
     def getAretes(self):
-        return list(map(lambda a: a, self._aretes))
+        return list(self._aretes)
 
     def getNom(self):
         return self._nom
@@ -102,7 +102,8 @@ class GrapheNonOriente:
                 aretesUniques.append(arete)
         return GrapheNonOriente(*self.getSommets(), aretes=aretesUniques)
 
-    def clique(n):
+    @classmethod
+    def clique(cls, n):
         if not isinstance(n, int) or n < 1:
             raise Exception("n doit être un entier strictement positif")
         sommets = [Sommet(str(i + 1)) for i in range(n)]
@@ -111,7 +112,7 @@ class GrapheNonOriente:
         for arete in listeAretes:
             if arete not in aretes:
                 aretes.append(arete)
-        return GrapheNonOriente(*sommets, aretes=aretes)
+        return cls(*sommets, aretes=aretes)
 
     def estClique(self):
         return all(
