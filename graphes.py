@@ -8,6 +8,9 @@ class Sommet:
     def __repr__(self):
         return self.nom
 
+    def getNom(self):
+        return self.nom
+
 
 class GrapheNonOriente:
     def __init__(self, *sommets, aretes=None, nom="", commentaire=""):

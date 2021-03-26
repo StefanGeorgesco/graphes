@@ -95,8 +95,11 @@ class GrapheMPM(GrapheOriente):
             s += f"\t{lien}: {p[lien]}\n"
         return s
 
-    def getTaches(self) -> list:
-        return self.getSommets()
+    def getTaches(self, deb_fin=True) -> list:
+        if deb_fin:
+            return self.getSommets()
+        else:
+            return self.getSommets() - {self.getTache_debut(), self.getTache_fin()}
 
     def getTache_debut(self) -> Tache:
         return self._tache_debut
