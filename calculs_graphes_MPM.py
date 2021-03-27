@@ -8,7 +8,7 @@ for nom in graphes_MPM.keys():
     taches = sorted(graphe_MPM.getTaches(deb_fin=False), key=Tache.__repr__)
     print("\t" + "".ljust(15), end="")
     for tache in taches:
-        print(tache.getNom()[:4].ljust(5), end="")
+        print(tache.nom()[:4].ljust(5), end="")
     print("\n\t" + "durée".ljust(15), end="")
     for tache in taches:
         print(repr(tache.getDuree()).ljust(5), end="")

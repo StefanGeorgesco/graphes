@@ -90,16 +90,16 @@ class GrapheMPM(GrapheOriente):
         for tache in sorted(list(self.getTaches()), key=Tache.__repr__):
             s += f"\t{tache}\n"
         s += "Liens :\n"
-        p = self.getP()
+        p = self.p()
         for lien in p.keys():
             s += f"\t{lien}: {p[lien]}\n"
         return s
 
     def getTaches(self, deb_fin=True) -> list:
         if deb_fin:
-            return self.getSommets()
+            return self.sommets()
         else:
-            return self.getSommets() - {self.getTache_debut(), self.getTache_fin()}
+            return self.sommets() - {self.getTache_debut(), self.getTache_fin()}
 
     def getTache_debut(self) -> Tache:
         return self._tache_debut
@@ -111,7 +111,7 @@ class GrapheMPM(GrapheOriente):
         pi, pere = self.bellman(self._tache_debut, plus_long=True)
         for tache in self._sommets:
             tache.setPlus_tot(pi[tache])
-        p = self.getP()
+        p = self.p()
         p2 = {}
         for t1, t2 in p.keys():
             p2.update({(t2, t1): p[(t1, t2)]})
