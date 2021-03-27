@@ -184,12 +184,25 @@ class GrapheOriente:
             self._p = dict(p)
             for s1, s2 in p.keys():
                 self._arcs.add(Arc(s1, s2, valuation=p[s1, s2]))
+            # if not self._verifier_arcs():
+            #     raise Exception("Une erreur s'est produite dans la construction du graphe (hash).")
         self.setNom(nom)
         self.setCommentaire(commentaire)
 
     def __repr__(self):
         return f"GrapheOrienté {self._nom} \
 ({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._p})"
+
+    def _verifier_arcs(self):
+        arcs = self.arcs()
+        return all(
+            map(
+                lambda x: x[0] != x[1] or \
+                                   x[0].sommet_depart() == x[1].sommet_depart() and \
+                                   x[0].sommet_arrivee() == x[1].sommet_arrivee(),
+                [(a1, a2) for a1 in arcs for a2 in arcs]
+            )
+        )
 
     def lier(self, sommet1, sommet2, poids):
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
