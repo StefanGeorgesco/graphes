@@ -140,6 +140,11 @@ class GraphePERT(GrapheOriente):
                         tache_fictive.setDepart(t.arrivee())
                         tache.setDepart(tache_fictive.arrivee())
                         liste_taches.append(tache_fictive)
+        for tache in set(taches) - set([x[0] for x in prec if x[0] is not None]):
+            tache_fictive = TachePERTFictive()
+            tache_fictive.setDepart(tache.arrivee())
+            tache_fictive.setArrivee(self._evenement_fin)
+            liste_taches.append(tache_fictive)
         liste_sommets = list(
             set(
                 map(
@@ -156,8 +161,26 @@ class GraphePERT(GrapheOriente):
             )
         )
         super().__init__(*liste_sommets, arcs=set(liste_taches), nom=nom, commentaire=commentaire)
-        # self._simplifier()
+        self._evenements = self._sommets
+        self._simplifier()
         # self._calculer_dates()
+
+    def evenements(self):
+        return self._evenements
+
+    def _simplifier(self):
+        for evenement in self._evenements:
+            if len(self.successeurs(evenement)) == 1 and len(self.predecesseurs(evenement)) == 1:
+                predecesseur = list(self.predecesseurs(evenement))[0]
+                successeur = list(self.successeurs(evenement))[0]
+                arc_avant = self.arc(predecesseur, evenement)
+                arc_apres = self.arc(evenement, successeur)
+                if isinstance(arc_avant, TachePERTFictive) and arc_avant.duree() == 0:
+                    arc_apres.setDepart(predecesseur)
+                    self._arcs.discard(arc_avant)
+                elif isinstance(arc_apres, TachePERTFictive) and arc_apres.duree() == 0:
+                    arc_avant.setArrivee(successeur)
+                    self._arcs.discard(arc_apres)
 
 
 class GrapheMPM(GrapheOriente):

@@ -37,3 +37,5 @@ for nom in graphes_PERT.keys():
         print(f"arrivée : {arc.arrivee()}")
         print(f"durée : {arc.valuation()}")
         print()
+    print(f"\nnombre d'événments : {graphe_ordonnancement.ordre()}")
+    print(f"\nnombre de taches : {graphe_ordonnancement.taille()}")
