@@ -158,7 +158,6 @@ class GrapheOriente:
             if not isinstance(sommet, Sommet):
                 raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
         self._sommets = set(sommets)
-        self._p = dict()
         if arcs is None:
             self._arcs = set()
         else:
@@ -174,30 +173,21 @@ class GrapheOriente:
             ):
                 raise Exception(f"Les arcs doivent être de type 'Arc' et lier des sommets de {sommets}")
             self._arcs = arcs
-            for arc in arcs:
-                self._p.update({(arc.depart(), arc.arrivee()): arc.valuation()})
         self.setNom(nom)
         self.setCommentaire(commentaire)
 
     def __repr__(self):
         return f"GrapheOrienté {self._nom} \
-({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._arcs})"
+({sorted(list(self._sommets), key=Sommet.__repr__)}, {sorted(self._arcs, key=Arc.__repr__)})"
 
     def lier(self, sommet1, sommet2, poids):
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
             raise Exception("Les sommets doivent appartenir au graphe")
-        self._p[(sommet1, sommet2)] = poids
         self._arcs.discard(Arc(sommet1, sommet2))
         self._arcs.add(Arc(sommet1, sommet2, poids))
 
     def sommets(self):
         return set(self._sommets)
-
-    def p(self):
-        return dict(self._p)
-
-    def arcs_(self):
-        return set(self._p.keys())
 
     def arcs(self):
         return set(self._arcs)
@@ -206,7 +196,7 @@ class GrapheOriente:
         arcs = list(
             filter(
                 lambda arc: arc.depart() == depart and arc.arrivee() == arrivee,
-                list(self._arcs)
+                self._arcs
             )
         )
         if arcs:
@@ -267,7 +257,7 @@ class GrapheOriente:
             raise Exception("Les sommets doivent appartenir au graphe")
         arcs = filter(
             lambda arc: arc.depart() in sommets and arc.arrivee() in sommets,
-            list(self.arcs())
+            self._arcs
         )
         return GrapheOriente(*sommets, arcs=set(arcs))
 
@@ -283,20 +273,19 @@ class GrapheOriente:
             raise Exception("Les arcs doivent appartenir au graphe")
         selection_arcs = filter(
             lambda arc: arc in arcs,
-            list(self._arcs)
+            self._arcs
         )
         return GrapheOriente(*self.sommets(), arcs=set(selection_arcs))
 
     def successeurs(self, sommet):
         if sommet not in self._sommets:
             raise Exception("Le sommet n'est pas dans le graphe")
-        arcs = self.p().keys()
         return set(
             map(
-                lambda x: x[1],
+                lambda arc: arc.arrivee(),
                 filter(
-                    lambda x: x[0] == sommet,
-                    arcs
+                    lambda arc: arc.depart() == sommet,
+                    self._arcs
                 )
             )
         )
@@ -304,13 +293,12 @@ class GrapheOriente:
     def predecesseurs(self, sommet):
         if sommet not in self._sommets:
             raise Exception("Le sommet n'est pas dans le graphe")
-        arcs = self.p().keys()
         return set(
             map(
-                lambda x: x[0],
+                lambda arc: arc.depart(),
                 filter(
-                    lambda x: x[1] == sommet,
-                    arcs
+                    lambda arc: arc.arrivee() == sommet,
+                    self._arcs
                 )
             )
         )
@@ -360,8 +348,8 @@ class GrapheOriente:
             raise Exception("'sommet' doit être un sommet du graphe")
         if any(
                 map(
-                    lambda x: x < 0,
-                    self._p.values()
+                    lambda arc: arc.valuation() < 0,
+                    self._arcs
                 )
         ):
             raise Exception("Les valuations du graphe ne sont pas toutes positives")
@@ -369,7 +357,6 @@ class GrapheOriente:
         pivot = r
         pi = {r: 0}
         pere = {}
-        p = self.p()
         n = self.ordre()
         sommets = self._sommets
         for x in sommets - {r}:
@@ -378,8 +365,8 @@ class GrapheOriente:
             return pi, pere
         for j in range(1, n):
             for y in (sommets - A).intersection(self.successeurs(pivot)):
-                if pi[pivot] + p[pivot, y] < pi[y]:
-                    pi[y] = pi[pivot] + p[pivot, y]
+                if pi[pivot] + self.valuation(pivot, y) < pi[y]:
+                    pi[y] = pi[pivot] + self.valuation(pivot, y)
                     pere[y] = pivot
             mini = min([pi[z] for z in sommets - A])
             pivot = list(
@@ -419,7 +406,6 @@ class GrapheOriente:
         A = {r}
         pi = {r: 0}
         pere = {}
-        p = self.p()
         n = self.ordre()
         for sommet in self._sommets - {r}:
             pi[sommet] = float('inf')
@@ -427,11 +413,11 @@ class GrapheOriente:
             return pi, pere
         for j in range(2, n + 1):
             y = list(num.keys())[list(num.values()).index(j)]
-            pi[y] = f([pi[x] + p[x, y] for x in A if x in self.predecesseurs(y)])
+            pi[y] = f([pi[x] + self.valuation(x, y) for x in A if x in self.predecesseurs(y)])
             x0 = list(
                 filter(
-                    lambda x: (x, y) in p and pi[y] == pi[x] + p[x, y],
-                    list(A)
+                    lambda x: Arc(x, y) in self._arcs and pi[y] == pi[x] + self.valuation(x, y),
+                    A
                 )
             )[0]
             pere[y] = x0
@@ -446,12 +432,11 @@ class GrapheOriente:
         limit = -float('inf') if plus_long else float('inf')
         pi = {r: 0}
         pere = {}
-        p = self.p()
         n = self.ordre()
         sommets = self._sommets
         for sommet in sommets - {r}:
             if sommet in self.successeurs(r):
-                pi[sommet] = p[r, sommet]
+                pi[sommet] = self.valuation(r, sommet)
                 pere[sommet] = r
             else:
                 pi[sommet] = limit
@@ -461,15 +446,15 @@ class GrapheOriente:
             for sommet in sommets - {r}:
                 predecesseurs = self.predecesseurs(sommet)
                 if len(predecesseurs) > 0:
-                    val = f([pi[y] + p[y, sommet] for y in predecesseurs])
+                    val = f([pi[y] + self.valuation(y, sommet) for y in predecesseurs])
                     x0 = list(
                         filter(
-                            lambda y: pi[y] + p[y, sommet] == val,
+                            lambda y: pi[y] + self.valuation(y, sommet) == val,
                             predecesseurs
                         )
                     )[0]
-                    if op(pi[x0] + p[x0, sommet], pi[sommet]):
-                        pi[sommet] = pi[x0] + p[x0, sommet]
+                    if op(pi[x0] + self.valuation(x0, sommet), pi[sommet]):
+                        pi[sommet] = pi[x0] + self.valuation(x0, sommet)
                         pere[sommet] = x0
         return pi, pere
 
@@ -481,7 +466,6 @@ class GrapheOriente:
         k = 0
         pi = {0: {r: 0}}
         pere = {}
-        p = self.p()
         n = self.ordre()
         sommets = self._sommets
         for sommet in sommets - {r}:
@@ -494,7 +478,7 @@ class GrapheOriente:
                 if len(predecesseurs) > 0:
                     val = f(
                         pi[k - 1][sommet],
-                        f([pi[k - 1][y] + p[y, sommet] for y in predecesseurs])
+                        f([pi[k - 1][y] + self.valuation(y, sommet) for y in predecesseurs])
                     )
                 else:
                     val = pi[k - 1][sommet]
@@ -505,7 +489,7 @@ class GrapheOriente:
                 if pi[k - 1][sommet] != pi[k][sommet]:
                     pere[sommet] = list(
                         filter(
-                            lambda y: pi[k - 1][y] + p[y, sommet] == val,
+                            lambda y: pi[k - 1][y] + self.valuation(y, sommet) == val,
                             self.predecesseurs(sommet)
                         )
                     )[0]
@@ -520,17 +504,16 @@ class GrapheOriente:
         f = max if plus_long else min
         op = operator.__gt__ if plus_long else operator.__lt__
         limit = -float('inf') if plus_long else float('inf')
-        n = len(self._sommets)
         M = {}
         P = {}
         sommets = self._sommets
         for x in sommets:
             for y in sommets:
-                M[x, y] = self._p[x, y] if x != y and (x, y) in self.arcs_() \
-                    else f(0, self._p[(x, y)]) if x == y and (x, y) in self.arcs_() \
-                    else 0 if x == y and (x, y) not in self.arcs_() \
+                M[x, y] = self.valuation(x, y) if x != y and Arc(x, y) in self._arcs \
+                    else f(0, self.valuation(x, y)) if x == y and Arc(x, y) in self._arcs \
+                    else 0 if x == y and Arc(x, y) not in self._arcs \
                     else limit
-                P[x, y] = x if x != y and (x, y) in self.arcs_() else None
+                P[x, y] = x if x != y and Arc(x, y) in self._arcs else None
         for k in sommets:
             for i in sommets:
                 for j in sommets:
