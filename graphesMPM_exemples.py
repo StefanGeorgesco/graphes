@@ -93,7 +93,7 @@ for jeu_donnees in donnees:
     nom = jeu_donnees["nom"]
     noms_taches = jeu_donnees["noms_tâches"]
     durees = jeu_donnees["durées"]
-    taches = [Tache(noms_taches[i], float(durees[i])) for i in range(len(noms_taches))]
+    taches = [TacheMPM(noms_taches[i], float(durees[i])) for i in range(len(noms_taches))]
     listes_taches[nom] = taches
     p = []
     for description_lien in jeu_donnees["liens"]:

@@ -1,4 +1,4 @@
-from graphesMPM_exemples import graphes_MPM, Tache
+from graphesMPM_exemples import graphes_MPM, TacheMPM
 
 for nom in graphes_MPM.keys():
     graphe_MPM = graphes_MPM[nom]
@@ -6,7 +6,7 @@ for nom in graphes_MPM.keys():
     print(graphe_MPM)
     print(f"\tDate de fin : {graphe_MPM.date_de_fin()}\n")
     print(f"\tTâches critiques : {graphe_MPM.taches_critiques()}\n\n")
-    taches = sorted(graphe_MPM.taches(deb_fin=False), key=Tache.__repr__)
+    taches = sorted(graphe_MPM.taches(deb_fin=False), key=TacheMPM.__repr__)
     print("\t" + "".ljust(15), end="")
     for tache in taches:
         print(tache.nom()[:4].ljust(5), end="")

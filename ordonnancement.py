@@ -1,7 +1,7 @@
 from graphes import Sommet, Arc, GrapheOriente
 
 
-class Tache(Sommet):
+class TacheMPM(Sommet):
     def __init__(self, nom: str, duree: float):
         super().__init__(nom)
         self._duree: float = duree
@@ -43,8 +43,8 @@ class Tache(Sommet):
 class GrapheMPM(GrapheOriente):
     def __init__(self, *taches, prec=None, nom="", commentaire=""):
         for tache in taches:
-            if not isinstance(tache, Tache):
-                raise Exception(f"Les tâches doivent appartenir au type '{Tache.__name__}'")
+            if not isinstance(tache, TacheMPM):
+                raise Exception(f"Les tâches doivent appartenir au type '{TacheMPM.__name__}'")
         liste_taches = list(taches)
         arcs = set()
         if prec is not None:
@@ -62,8 +62,8 @@ class GrapheMPM(GrapheOriente):
             ):
                 raise Exception(f"Les éléments de {prec} doivent être du type \
 (t1,t2) ou (t1,t2,durée), où t1,t2 sont dans {taches} et durée est un flottant")
-            self._tache_debut = Tache(".Début", 0.0)
-            self._tache_fin = Tache(".Fin", 0.0)
+            self._tache_debut = TacheMPM(".Début", 0.0)
+            self._tache_fin = TacheMPM(".Fin", 0.0)
             liste_taches.append(self._tache_debut)
             liste_taches.append(self._tache_fin)
             for x in prec:
@@ -88,7 +88,7 @@ class GrapheMPM(GrapheOriente):
 
     def __str__(self) -> str:
         s = f"GrapheMPM {self._nom}\n\nTaches :\n"
-        for tache in sorted(list(self.taches()), key=Tache.__repr__):
+        for tache in sorted(list(self.taches()), key=TacheMPM.__repr__):
             s += f"\t{tache}\n"
         s += "\nLiens :\n"
         for arc in self._arcs:
@@ -101,10 +101,10 @@ class GrapheMPM(GrapheOriente):
         else:
             return self.sommets() - {self.tache_debut(), self.tache_fin()}
 
-    def tache_debut(self) -> Tache:
+    def tache_debut(self) -> TacheMPM:
         return self._tache_debut
 
-    def tache_fin(self) -> Tache:
+    def tache_fin(self) -> TacheMPM:
         return self._tache_fin
 
     def _calculer_dates(self) -> None:
@@ -143,5 +143,5 @@ class GrapheMPM(GrapheOriente):
                     )
                 ) - {self._tache_debut, self._tache_fin}
             ),
-            key=Tache.__repr__
+            key=TacheMPM.__repr__
         )
