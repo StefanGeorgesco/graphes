@@ -162,8 +162,8 @@ class GraphePERT(GrapheOriente):
         )
         super().__init__(*liste_sommets, arcs=set(liste_taches), nom=nom, commentaire=commentaire)
         self._evenements = self._sommets
-        self._simplifier()
-        # self._calculer_dates()
+        # self._simplifier()
+        self._calculer_dates()
 
     def evenements(self):
         return self._evenements
@@ -181,6 +181,9 @@ class GraphePERT(GrapheOriente):
                 elif isinstance(arc_apres, TachePERTFictive) and arc_apres.duree() == 0:
                     arc_avant.setArrivee(successeur)
                     self._arcs.discard(arc_apres)
+
+    def _calculer_dates(self):
+        pass
 
 
 class GrapheMPM(GrapheOriente):
