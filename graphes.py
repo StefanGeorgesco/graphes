@@ -151,6 +151,9 @@ class Arc:
     def valuation(self):
         return self._valuation
 
+    def setValuation(self, valuation: float):
+        self._valuation = valuation
+
 
 class GrapheOriente:
     def __init__(self, *sommets, arcs=None, nom="", commentaire=""):

@@ -1,19 +1,14 @@
 from graphes import Sommet, Arc, GrapheOriente
 
 
-class TacheMPM(Sommet):
-    def __init__(self, nom: str, duree: float):
-        super().__init__(nom)
-        self._duree: float = duree
+class Tache:
+    def __init__(self):
         self._plus_tot: float = 0.0
         self._plus_tard: float = 0.0
         self._marge_libre: float = 0.0
 
     def __repr__(self):
-        return super().__repr__() + f"({self.plus_tot()},{self.plus_tard()})"
-
-    def duree(self) -> float:
-        return self._duree
+        return f"({self.plus_tot()},{self.plus_tard()})"
 
     def plus_tot(self) -> float:
         return self._plus_tot
@@ -23,9 +18,6 @@ class TacheMPM(Sommet):
 
     def marge_libre(self) -> float:
         return self._marge_libre
-
-    def setDuree(self, duree: float) -> None:
-        self._duree = duree
 
     def setPlus_tot(self, plus_tot: float) -> None:
         self._plus_tot = plus_tot
@@ -38,6 +30,64 @@ class TacheMPM(Sommet):
 
     def marge_totale(self) -> float:
         return self._plus_tard - self._plus_tot
+
+
+class TacheMPM(Tache, Sommet):
+    def __init__(self, nom: str, duree: float):
+        Tache.__init__(self)
+        Sommet.__init__(self, nom)
+        self._duree: float = duree
+
+    def __repr__(self):
+        return Sommet.__repr__(self) + Tache.__repr__(self)
+
+    def nom(self):
+        return self._nom
+
+    def duree(self) -> float:
+        return self._duree
+
+    def setDuree(self, duree: float) -> None:
+        self._duree = duree
+
+
+class EvenementPERT(Sommet):
+    def __init__(self, nom: str):
+        super().__init__(nom)
+        self._plus_tot: float = 0.0
+        self._plus_tard: float = 0.0
+
+    def plus_tot(self) -> float:
+        return self._plus_tot
+
+    def plus_tard(self) -> float:
+        return self._plus_tard
+
+    def setPlus_tot(self, plus_tot: float) -> None:
+        self._plus_tot = plus_tot
+
+    def setPlus_tard(self, plus_tard: float) -> None:
+        self._plus_tard = plus_tard
+
+
+class TachePERT(Tache, Arc):
+    def __init__(self, nom: str, duree: float):
+        Tache.__init__(self)
+        Arc.__init__(self, EvenementPERT("début " + nom), EvenementPERT("fin " + nom), duree)
+        self._nom = nom
+
+    def __repr__(self):
+        return self._nom + Tache.__repr__(self)
+
+    def duree(self) -> float:
+        return self._valuation
+
+    def setDuree(self, duree: float) -> None:
+        self.setValuation(duree)
+
+
+class GraphePERT(GrapheOriente):
+    pass
 
 
 class GrapheMPM(GrapheOriente):
@@ -145,3 +195,5 @@ class GrapheMPM(GrapheOriente):
             ),
             key=TacheMPM.__repr__
         )
+
+
