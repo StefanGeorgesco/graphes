@@ -184,6 +184,7 @@ class GrapheOriente:
                 raise Exception("Les valeurs de p doivent être des entiers ou des flottants")
             self._p = dict(p)
             for s1, s2 in p.keys():
+                self._arcs.discard(Arc(s1, s2))
                 self._arcs.add(Arc(s1, s2, valuation=p[s1, s2]))
         self.setNom(nom)
         self.setCommentaire(commentaire)
@@ -196,6 +197,7 @@ class GrapheOriente:
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
             raise Exception("Les sommets doivent appartenir au graphe")
         self._p[(sommet1, sommet2)] = poids
+        self._arcs.discard(Arc(sommet1, sommet2))
         self._arcs.add(Arc(sommet1, sommet2, poids))
 
     def sommets(self):
