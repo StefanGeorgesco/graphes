@@ -83,16 +83,16 @@ class GrapheMPM(GrapheOriente):
         self._calculer_dates()
 
     def __repr__(self) -> str:
-        return f"GrapheMPM {self._nom} ({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._p})"
+        return f"GrapheMPM {self._nom} ({sorted(list(self._sommets), key=Sommet.__repr__)}, \
+{sorted(self._arcs, key=Arc.__repr__)})"
 
     def __str__(self) -> str:
-        s = f"\nGrapheMPM {self._nom}\n\nTaches :\n"
+        s = f"GrapheMPM {self._nom}\n\nTaches :\n"
         for tache in sorted(list(self.taches()), key=Tache.__repr__):
             s += f"\t{tache}\n"
         s += "\nLiens :\n"
-        p = self.p()
-        for lien in p.keys():
-            s += f"\t{lien}: {p[lien]}\n"
+        for arc in self._arcs:
+            s += f"\t{(arc.depart(), arc.arrivee(), arc.valuation())}\n"
         return s
 
     def taches(self, deb_fin=True) -> list:
