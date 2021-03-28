@@ -127,25 +127,26 @@ class GrapheNonOriente:
 
 
 class Arc:
-    def __init__(self, sommet_depart: Sommet, sommet_arrivee: Sommet, valuation: float = 1.0):
-        self._sommet_depart = sommet_depart
-        self._sommet_arrivee = sommet_arrivee
+    def __init__(self, depart: Sommet, arrivee: Sommet, valuation: float = 1.0):
+        self._depart = depart
+        self._arrivee = arrivee
         self._valuation = valuation
 
     def __hash__(self):
-        return self._sommet_arrivee.__hash__() - self._sommet_depart.__hash__()
+        return (self._depart.__hash__(), self._arrivee.__hash__()).__hash__()
 
     def __eq__(self, other):
-        return self.__hash__() == other.__hash__()
+        return (self._depart.__hash__(), self._arrivee.__hash__()) == \
+               (other.depart().__hash__(), other.arrivee().__hash__())
 
     def __repr__(self):
-        return f"({self._sommet_depart},{self._sommet_arrivee})"
+        return f"({self._depart},{self._arrivee})"
 
-    def sommet_depart(self):
-        return self._sommet_depart
+    def depart(self):
+        return self._depart
 
-    def sommet_arrivee(self):
-        return self._sommet_arrivee
+    def arrivee(self):
+        return self._arrivee
 
     def valuation(self):
         return self._valuation
@@ -184,25 +185,12 @@ class GrapheOriente:
             self._p = dict(p)
             for s1, s2 in p.keys():
                 self._arcs.add(Arc(s1, s2, valuation=p[s1, s2]))
-            # if not self._verifier_arcs():
-            #     raise Exception("Une erreur s'est produite dans la construction du graphe (hash).")
         self.setNom(nom)
         self.setCommentaire(commentaire)
 
     def __repr__(self):
         return f"GrapheOrienté {self._nom} \
 ({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._p})"
-
-    def _verifier_arcs(self):
-        arcs = self.arcs()
-        return all(
-            map(
-                lambda x: x[0] != x[1] or \
-                                   x[0].sommet_depart() == x[1].sommet_depart() and \
-                                   x[0].sommet_arrivee() == x[1].sommet_arrivee(),
-                [(a1, a2) for a1 in arcs for a2 in arcs]
-            )
-        )
 
     def lier(self, sommet1, sommet2, poids):
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
