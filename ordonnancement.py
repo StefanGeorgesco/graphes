@@ -10,18 +10,18 @@ class Tache(Sommet):
         self._marge_libre: float = 0.0
 
     def __repr__(self):
-        return super().__repr__() + f"({self.getPlus_tot()},{self.getPlus_tard()})"
+        return super().__repr__() + f"({self.plus_tot()},{self.plus_tard()})"
 
-    def getDuree(self) -> float:
+    def duree(self) -> float:
         return self._duree
 
-    def getPlus_tot(self) -> float:
+    def plus_tot(self) -> float:
         return self._plus_tot
 
-    def getPlus_tard(self) -> float:
+    def plus_tard(self) -> float:
         return self._plus_tard
 
-    def getMarge_libre(self) -> float:
+    def marge_libre(self) -> float:
         return self._marge_libre
 
     def setDuree(self, duree: float) -> None:
@@ -69,7 +69,7 @@ class GrapheMPM(GrapheOriente):
             for x in prec:
                 if len(x) == 2:
                     t1, t2 = x
-                    arcs.add(Arc(t1, t2, t1.getDuree()))
+                    arcs.add(Arc(t1, t2, t1.duree()))
                 else:
                     t1, t2, d = x
                     if t1 is None:
@@ -78,7 +78,7 @@ class GrapheMPM(GrapheOriente):
             for tache in set(taches) - set(map(lambda x: x[1], prec)):
                 arcs.add(Arc(self._tache_debut, tache, 0.0))
             for tache in set(taches) - set(map(lambda x: x[0], prec)):
-                arcs.add(Arc(tache, self._tache_fin, tache.getDuree()))
+                arcs.add(Arc(tache, self._tache_fin, tache.duree()))
         super().__init__(*liste_taches, arcs=arcs, nom=nom, commentaire=commentaire)
         self._calculer_dates()
 
@@ -87,7 +87,7 @@ class GrapheMPM(GrapheOriente):
 
     def __str__(self) -> str:
         s = f"\nGrapheMPM {self._nom}\n\nTaches :\n"
-        for tache in sorted(list(self.getTaches()), key=Tache.__repr__):
+        for tache in sorted(list(self.taches()), key=Tache.__repr__):
             s += f"\t{tache}\n"
         s += "\nLiens :\n"
         p = self.p()
@@ -95,16 +95,16 @@ class GrapheMPM(GrapheOriente):
             s += f"\t{lien}: {p[lien]}\n"
         return s
 
-    def getTaches(self, deb_fin=True) -> list:
+    def taches(self, deb_fin=True) -> list:
         if deb_fin:
             return self.sommets()
         else:
-            return self.sommets() - {self.getTache_debut(), self.getTache_fin()}
+            return self.sommets() - {self.tache_debut(), self.tache_fin()}
 
-    def getTache_debut(self) -> Tache:
+    def tache_debut(self) -> Tache:
         return self._tache_debut
 
-    def getTache_fin(self) -> Tache:
+    def tache_fin(self) -> Tache:
         return self._tache_fin
 
     def _calculer_dates(self) -> None:
@@ -117,21 +117,21 @@ class GrapheMPM(GrapheOriente):
             arcs.add(Arc(arrivee, depart, self.valuation(depart, arrivee)))
         graphe = GrapheOriente(*self._sommets, arcs=arcs)
         pi, _ = graphe.bellman(self._tache_fin, plus_long=True)
-        date_de_fin = self._tache_fin.getPlus_tot()
+        date_de_fin = self._tache_fin.plus_tot()
         for tache in self._sommets:
             tache.setPlus_tard(date_de_fin - pi[tache])
             if tache != self._tache_fin:
                 tache.setMarge_libre(
                     min(
                         [
-                            succ.getPlus_tot() - tache.getPlus_tot() - self.valuation(tache, succ)
+                            succ.plus_tot() - tache.plus_tot() - self.valuation(tache, succ)
                             for succ in self.successeurs(tache)
                         ]
                     )
                 )
 
     def date_de_fin(self) -> float:
-        return self._tache_fin.getPlus_tot()
+        return self._tache_fin.plus_tot()
 
     def taches_critiques(self) -> list:
         return sorted(
@@ -139,7 +139,7 @@ class GrapheMPM(GrapheOriente):
                 set(
                     filter(
                         lambda tache: tache.marge_totale() == 0.0,
-                        self.getTaches()
+                        self.taches()
                     )
                 ) - {self._tache_debut, self._tache_fin}
             ),
