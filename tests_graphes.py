@@ -202,7 +202,7 @@ class TestsGraphesOrientes(unittest.TestCase):
         s5 = Sommet("5")
         graphe1 = GrapheOriente(
             s1, s2, s3, s4, s5,
-            p={(s1, s2): 2.0, (s1, s3): 5.0, (s2, s4): -1.0, (s4, s2): 1.0, (s4, s5): 1.0, (s5, s1): -3.0}
+            arcs={Arc(s1, s2, 2.0), Arc(s1, s3, 5.0), Arc(s2, s4, -1.0), Arc(s4, s2, 1.0), Arc(s4, s5, 1.0), Arc(s5, s1, -3.0)}
         )
         arcs = graphe1.arcs()
         self.assertEqual(6, len(arcs))
@@ -243,12 +243,24 @@ class TestsGraphesOrientes(unittest.TestCase):
         valuations = set(map(lambda arc: arc.valuation(), list(arcs)))
         self.assertEqual({1.0, 2.0}, valuations)
 
+    def test_arc(self):
+        graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
+        A, B, C, D, E, F = sommets
+        self.assertEqual(Arc(A, B), graphe.arc(A, B))
+        self.assertEqual(4, graphe.arc(A, B).valuation())
+        self.assertEqual(Arc(B, E), graphe.arc(B, E))
+        self.assertEqual(-2, graphe.arc(B, E).valuation())
+        self.assertTrue(graphe.arc(A, C) is None)
+        self.assertTrue(graphe.arc(F, A) is None)
+        self.assertEqual(5, graphe.valuation(D, B))
+        self.assertEqual(4, graphe.valuation(F, E))
+
     def test_ordre_et_taille_graphe_oriente(self):
         s1 = Sommet("1")
         s2 = Sommet("2")
         s3 = Sommet("3")
         s4 = Sommet("4")
-        graphe1 = GrapheOriente(s1, s2, s3, p={(s1, s2): 2.0, (s1, s3): 5.0})
+        graphe1 = GrapheOriente(s1, s2, s3, arcs={Arc(s1, s2, 2.0), Arc(s1, s3, 5.0)})
         self.assertEqual(3, graphe1.ordre())
         self.assertEqual(2, graphe1.taille())
         graphe2 = GrapheOriente(s1, s2, s3, s4)
@@ -264,63 +276,63 @@ class TestsGraphesOrientes(unittest.TestCase):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         self.assertEqual(set(sommets), graphe.sommets())
-        arcs = graphe.arcs_()
+        arcs = graphe.arcs()
         self.assertEqual(len(arcs), 10)
-        self.assertTrue((F, D) in arcs)
-        self.assertTrue((D, B) in arcs)
-        self.assertTrue((A, E) in arcs)
-        self.assertTrue((C, F) in arcs)
-        self.assertTrue((D, C) in arcs)
-        self.assertFalse((D, F) in arcs)
-        self.assertFalse((B, D) in arcs)
-        self.assertFalse((E, A) in arcs)
-        self.assertFalse((F, C) in arcs)
-        self.assertFalse((C, D) in arcs)
-        self.assertFalse((C, E) in arcs)
-        self.assertFalse((B, F) in arcs)
-        self.assertFalse((D, A) in arcs)
+        self.assertTrue(Arc(F, D) in arcs)
+        self.assertTrue(Arc(D, B) in arcs)
+        self.assertTrue(Arc(A, E) in arcs)
+        self.assertTrue(Arc(C, F) in arcs)
+        self.assertTrue(Arc(D, C) in arcs)
+        self.assertFalse(Arc(D, F) in arcs)
+        self.assertFalse(Arc(B, D) in arcs)
+        self.assertFalse(Arc(E, A) in arcs)
+        self.assertFalse(Arc(F, C) in arcs)
+        self.assertFalse(Arc(C, D) in arcs)
+        self.assertFalse(Arc(C, E) in arcs)
+        self.assertFalse(Arc(B, F) in arcs)
+        self.assertFalse(Arc(D, A) in arcs)
 
     def test_copie_graphe_oriente(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         graphe.setNom("nom")
         graphe_copie = graphe.copie()
-        self.assertEqual("nom", graphe_copie.nom())
+        self.assertEqual("Copie de nom", graphe_copie.nom())
+        self.assertEqual("Copie de " + graphe.nom(), graphe_copie.nom())
         self.assertEqual("'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92", graphe_copie.commentaire())
-        self.assertEqual(set(sommets), graphe_copie.sommets())
-        arcs = graphe_copie.arcs_()
-        self.assertEqual(len(arcs), 10)
-        self.assertTrue((F, D) in arcs)
-        self.assertTrue((D, B) in arcs)
-        self.assertTrue((A, E) in arcs)
-        self.assertTrue((C, F) in arcs)
-        self.assertTrue((D, C) in arcs)
-        self.assertFalse((D, F) in arcs)
-        self.assertFalse((B, D) in arcs)
-        self.assertFalse((E, A) in arcs)
-        self.assertFalse((F, C) in arcs)
-        self.assertFalse((C, D) in arcs)
-        self.assertFalse((C, E) in arcs)
-        self.assertFalse((B, F) in arcs)
-        self.assertFalse((D, A) in arcs)
+        self.assertEqual(graphe.commentaire(), graphe_copie.commentaire())
+        self.assertEqual(graphe.ordre(), graphe_copie.ordre())
+        self.assertEqual(graphe.taille(), graphe_copie.taille())
+        self.assertEqual(
+            set(map(lambda sommet: sommet.nom(), graphe.sommets())),
+            set(map(lambda sommet: sommet.nom(), graphe_copie.sommets()))
+        )
+        self.assertEqual(
+            set(map(lambda arc: repr(arc), graphe.arcs())),
+            set(map(lambda arc: repr(arc), graphe_copie.arcs()))
+        )
 
     def test_sous_graphe_graphe_oriente(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
         sous_graphe = graphe.sous_graphe({A, B, C, E, F})
+        self.assertEqual(6, len(graphe.sommets()))
         self.assertEqual(5, len(sous_graphe.sommets()))
         self.assertEqual({A, B, C, E, F}, sous_graphe.sommets())
-        self.assertEqual(6, len(sous_graphe.arcs_()))
-        self.assertEqual({(A, B), (A, E), (B, E), (B, C), (F, E), (C, F)}, sous_graphe.arcs_())
+        self.assertEqual(10, len(graphe.arcs()))
+        self.assertEqual(6, len(sous_graphe.arcs()))
+        self.assertEqual({Arc(A, B), Arc(A, E), Arc(B, E), Arc(B, C), Arc(F, E), Arc(C, F)}, sous_graphe.arcs())
 
     def test_graphe_partiel_graphe_oriente(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
         A, B, C, D, E, F = sommets
-        graphe_partiel = graphe.graphe_partiel({(A, B), (B, C), (C, F), (F, E), (F, D)})
+        graphe_partiel = graphe.graphe_partiel({Arc(A, B), Arc(B, C), Arc(C, F), Arc(F, E), Arc(F, D)})
+        self.assertEqual(6, len(graphe.sommets()))
         self.assertEqual(6, len(graphe_partiel.sommets()))
         self.assertEqual({A, B, C, D, E, F}, graphe_partiel.sommets())
-        self.assertEqual(5, len(graphe_partiel.arcs_()))
-        self.assertEqual({(A, B), (B, C), (C, F), (F, E), (F, D)}, graphe_partiel.arcs_())
+        self.assertEqual(10, len(graphe.arcs()))
+        self.assertEqual(5, len(graphe_partiel.arcs()))
+        self.assertEqual({Arc(A, B), Arc(B, C), Arc(C, F), Arc(F, E), Arc(F, D)}, graphe_partiel.arcs())
 
     def test_successeurs(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]

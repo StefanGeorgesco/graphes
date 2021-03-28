@@ -140,7 +140,7 @@ class Arc:
                (other.depart().__hash__(), other.arrivee().__hash__())
 
     def __repr__(self):
-        return f"({self._depart},{self._arrivee})"
+        return f"({self._depart},{self._arrivee},{self._valuation})"
 
     def depart(self):
         return self._depart
@@ -153,45 +153,35 @@ class Arc:
 
 
 class GrapheOriente:
-    def __init__(self, *sommets, p=None, nom="", commentaire=""):
+    def __init__(self, *sommets, arcs=None, nom="", commentaire=""):
         for sommet in sommets:
             if not isinstance(sommet, Sommet):
                 raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
         self._sommets = set(sommets)
-        self._arcs = set()
-        if p is None:
-            self._p = dict()
+        self._p = dict()
+        if arcs is None:
+            self._arcs = set()
         else:
-            if not isinstance(p, dict):
-                raise Exception("p doit être un dict")
+            if not isinstance(arcs, set):
+                raise Exception("Le paramètre 'arcs' doit être un 'set'.")
             if not all(
                     map(
-                        lambda x: isinstance(x, tuple) and \
-                                  len(x) == 2 and \
-                                  x[0] in sommets and \
-                                  x[1] in sommets,
-                        p.keys()
+                        lambda arc: isinstance(arc, Arc) and \
+                                    arc.depart() in sommets and \
+                                    arc.arrivee() in sommets,
+                        list(arcs)
                     )
             ):
-                raise Exception(f"Les clés de p doivent être des 2-tuples de sommets de {sommets}")
-            if not all(
-                    map(
-                        lambda x: isinstance(x, int) or \
-                                  isinstance(x, float),
-                        p.values()
-                    )
-            ):
-                raise Exception("Les valeurs de p doivent être des entiers ou des flottants")
-            self._p = dict(p)
-            for s1, s2 in p.keys():
-                self._arcs.discard(Arc(s1, s2))
-                self._arcs.add(Arc(s1, s2, valuation=p[s1, s2]))
+                raise Exception(f"Les arcs doivent être de type 'Arc' et lier des sommets de {sommets}")
+            self._arcs = arcs
+            for arc in arcs:
+                self._p.update({(arc.depart(), arc.arrivee()): arc.valuation()})
         self.setNom(nom)
         self.setCommentaire(commentaire)
 
     def __repr__(self):
         return f"GrapheOrienté {self._nom} \
-({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._p})"
+({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._arcs})"
 
     def lier(self, sommet1, sommet2, poids):
         if sommet1 not in self._sommets or sommet2 not in self._sommets:
@@ -211,6 +201,21 @@ class GrapheOriente:
 
     def arcs(self):
         return set(self._arcs)
+
+    def arc(self, depart: Sommet, arrivee: Sommet):
+        arcs = list(
+            filter(
+                lambda arc: arc.depart() == depart and arc.arrivee() == arrivee,
+                list(self._arcs)
+            )
+        )
+        if arcs:
+            return arcs[0]
+        else:
+            return None
+
+    def valuation(self, depart: Sommet, arrivee: Sommet):
+        return self.arc(depart, arrivee).valuation()
 
     def nom(self):
         return self._nom
@@ -232,13 +237,22 @@ class GrapheOriente:
         return len(self._sommets)
 
     def taille(self):
-        return len(self.arcs_())
+        return len(self.arcs())
 
     def copie(self):
+        sommets = {}
+        for sommet in self._sommets:
+            sommets.update({sommet: Sommet(sommet.nom())})
+        arcs = set(
+            map(
+                lambda arc: Arc(sommets[arc.depart()], sommets[arc.arrivee()], arc.valuation()),
+                list(self._arcs)
+            )
+        )
         return GrapheOriente(
-            *self.sommets(),
-            p=self.p(),
-            nom=self.nom(),
+            *sommets.values(),
+            arcs=arcs,
+            nom="Copie de " + self.nom(),
             commentaire=self.commentaire()
         )
 
@@ -252,26 +266,26 @@ class GrapheOriente:
         ):
             raise Exception("Les sommets doivent appartenir au graphe")
         arcs = filter(
-            lambda arc: arc[0] in sommets and arc[1] in sommets,
-            self.arcs_()
+            lambda arc: arc.depart() in sommets and arc.arrivee() in sommets,
+            list(self.arcs())
         )
-        p = {}
-        for arc in arcs:
-            p.update({tuple(arc): self._p[arc]})
-        return GrapheOriente(*sommets, p=p)
+        return GrapheOriente(*sommets, arcs=set(arcs))
 
     def graphe_partiel(self, arcs):
+        if not isinstance(arcs, set):
+            raise Exception("Le paramètre 'arcs' doit être un set")
         if not all(
                 map(
-                    lambda a: a in self.arcs_(),
-                    arcs
+                    lambda arc: arc in self.arcs(),
+                    list(arcs)
                 )
         ):
             raise Exception("Les arcs doivent appartenir au graphe")
-        p = {}
-        for arc in arcs:
-            p.update({tuple(arc): self._p[arc]})
-        return GrapheOriente(*self.sommets(), p=p)
+        selection_arcs = filter(
+            lambda arc: arc in arcs,
+            list(self._arcs)
+        )
+        return GrapheOriente(*self.sommets(), arcs=set(selection_arcs))
 
     def successeurs(self, sommet):
         if sommet not in self._sommets:
@@ -379,7 +393,7 @@ class GrapheOriente:
 
     def numerotation_topolgique(self):
         num = {}
-        graphe = self.copie()
+        graphe = self
         n = graphe.ordre()
         if n < 1:
             return num

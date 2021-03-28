@@ -24,3 +24,4 @@ for nom in graphes_MPM.keys():
     print("\n\t" + "marge totale".ljust(15), end="")
     for tache in taches:
         print(repr(tache.marge_totale()).ljust(5), end="")
+    print("\n")

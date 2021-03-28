@@ -1,4 +1,4 @@
-from graphes import GrapheOriente, Sommet
+from graphes import Sommet, Arc, GrapheOriente
 
 
 class Tache(Sommet):
@@ -46,7 +46,7 @@ class GrapheMPM(GrapheOriente):
             if not isinstance(tache, Tache):
                 raise Exception(f"Les tâches doivent appartenir au type '{Tache.__name__}'")
         liste_taches = list(taches)
-        p = {}
+        arcs = set()
         if prec is not None:
             if not isinstance(prec, list):
                 raise Exception(f"{prec} doit être une liste")
@@ -69,27 +69,27 @@ class GrapheMPM(GrapheOriente):
             for x in prec:
                 if len(x) == 2:
                     t1, t2 = x
-                    p.update({(t1, t2): t1.getDuree()})
+                    arcs.add(Arc(t1, t2, t1.getDuree()))
                 else:
                     t1, t2, d = x
                     if t1 is None:
                         t1 = self._tache_debut
-                    p.update({(t1, t2): d})
+                    arcs.add(Arc(t1, t2, d))
             for tache in set(taches) - set(map(lambda x: x[1], prec)):
-                p.update({(self._tache_debut, tache): 0.0})
+                arcs.add(Arc(self._tache_debut, tache, 0.0))
             for tache in set(taches) - set(map(lambda x: x[0], prec)):
-                p.update({(tache, self._tache_fin): tache.getDuree()})
-        super().__init__(*liste_taches, p=p, nom=nom, commentaire=commentaire)
+                arcs.add(Arc(tache, self._tache_fin, tache.getDuree()))
+        super().__init__(*liste_taches, arcs=arcs, nom=nom, commentaire=commentaire)
         self._calculer_dates()
 
     def __repr__(self) -> str:
         return f"GrapheMPM {self._nom} ({sorted(list(self._sommets), key=Sommet.__repr__)}, {self._p})"
 
     def __str__(self) -> str:
-        s = f"GrapheMPM {self._nom}\nTaches :\n"
+        s = f"\nGrapheMPM {self._nom}\n\nTaches :\n"
         for tache in sorted(list(self.getTaches()), key=Tache.__repr__):
             s += f"\t{tache}\n"
-        s += "Liens :\n"
+        s += "\nLiens :\n"
         p = self.p()
         for lien in p.keys():
             s += f"\t{lien}: {p[lien]}\n"
@@ -111,11 +111,11 @@ class GrapheMPM(GrapheOriente):
         pi, pere = self.bellman(self._tache_debut, plus_long=True)
         for tache in self._sommets:
             tache.setPlus_tot(pi[tache])
-        p = self.p()
-        p2 = {}
-        for t1, t2 in p.keys():
-            p2.update({(t2, t1): p[(t1, t2)]})
-        graphe = GrapheOriente(*self._sommets, p=p2)
+        arcs = set()
+        for arc in self._arcs:
+            depart, arrivee = arc.depart(), arc.arrivee()
+            arcs.add(Arc(arrivee, depart, self.valuation(depart, arrivee)))
+        graphe = GrapheOriente(*self._sommets, arcs=arcs)
         pi, _ = graphe.bellman(self._tache_fin, plus_long=True)
         date_de_fin = self._tache_fin.getPlus_tot()
         for tache in self._sommets:
@@ -124,7 +124,7 @@ class GrapheMPM(GrapheOriente):
                 tache.setMarge_libre(
                     min(
                         [
-                            succ.getPlus_tot() - tache.getPlus_tot() - p[tache, succ]
+                            succ.getPlus_tot() - tache.getPlus_tot() - self.valuation(tache, succ)
                             for succ in self.successeurs(tache)
                         ]
                     )
