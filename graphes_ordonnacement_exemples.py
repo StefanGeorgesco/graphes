@@ -87,26 +87,40 @@ donnees = [
 ]
 
 graphes_MPM = {}
-listes_taches = {}
+listes_taches_MPM = {}
+graphes_PERT = {}
+listes_taches_PERT = {}
 
 for jeu_donnees in donnees:
     nom = jeu_donnees["nom"]
     noms_taches = jeu_donnees["noms_tâches"]
     durees = jeu_donnees["durées"]
-    taches = [TacheMPM(noms_taches[i], float(durees[i])) for i in range(len(noms_taches))]
-    listes_taches[nom] = taches
-    p = []
+    taches_MPM = [TacheMPM(noms_taches[i], float(durees[i])) for i in range(len(noms_taches))]
+    listes_taches_MPM[nom] = taches_MPM
+    taches_PERT = [TachePERT(noms_taches[i], float(durees[i])) for i in range(len(noms_taches))]
+    listes_taches_PERT[nom] = taches_PERT
+    p_MPM = []
+    p_PERT = []
     for description_lien in jeu_donnees["liens"]:
         if len(description_lien) == 2:
             nom_t1, nom_t2 = description_lien
-            p.append((taches[noms_taches.index(nom_t1)], taches[noms_taches.index(nom_t2)]))
+            p_MPM.append((taches_MPM[noms_taches.index(nom_t1)], taches_MPM[noms_taches.index(nom_t2)]))
+            p_PERT.append((taches_PERT[noms_taches.index(nom_t1)], taches_PERT[noms_taches.index(nom_t2)]))
         else:
             nom_t1, nom_t2, duree = description_lien
-            p.append(
+            p_MPM.append(
                 (
-                    None if nom_t1 == "None" else taches[noms_taches.index(nom_t1)],
-                    taches[noms_taches.index(nom_t2)],
+                    None if nom_t1 == "None" else taches_MPM[noms_taches.index(nom_t1)],
+                    taches_MPM[noms_taches.index(nom_t2)],
                     duree
                 )
             )
-    graphes_MPM[nom] = GrapheMPM(*taches, prec=p, nom=nom)
+            p_PERT.append(
+                (
+                    None if nom_t1 == "None" else taches_PERT[noms_taches.index(nom_t1)],
+                    taches_PERT[noms_taches.index(nom_t2)],
+                    duree
+                )
+            )
+    graphes_MPM[nom] = GrapheMPM(*taches_MPM, prec=p_MPM, nom=nom)
+    graphes_PERT[nom] = GraphePERT(*taches_PERT, prec=p_PERT, nom=nom)

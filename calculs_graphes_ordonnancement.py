@@ -1,12 +1,13 @@
-from graphesMPM_exemples import graphes_MPM, TacheMPM
+from ordonnancement import Tache
+from graphes_ordonnacement_exemples import graphes_MPM, graphes_PERT
 
 for nom in graphes_MPM.keys():
-    graphe_MPM = graphes_MPM[nom]
-    print("\n" + repr(graphe_MPM))
-    print(graphe_MPM)
-    print(f"\tDate de fin : {graphe_MPM.date_de_fin()}\n")
-    print(f"\tTâches critiques : {graphe_MPM.taches_critiques()}\n\n")
-    taches = sorted(graphe_MPM.taches(deb_fin=False), key=TacheMPM.__repr__)
+    graphe_ordonnancement = graphes_MPM[nom]
+    print("\n" + repr(graphe_ordonnancement))
+    print(graphe_ordonnancement)
+    print(f"\tDate de fin : {graphe_ordonnancement.date_de_fin()}\n")
+    print(f"\tTâches critiques : {graphe_ordonnancement.taches_critiques()}\n\n")
+    taches = sorted(graphe_ordonnancement.taches(deb_fin=False), key=Tache.__repr__)
     print("\t" + "".ljust(15), end="")
     for tache in taches:
         print(tache.nom()[:4].ljust(5), end="")
@@ -26,3 +27,13 @@ for nom in graphes_MPM.keys():
     for tache in taches:
         print(repr(tache.marge_totale()).ljust(5), end="")
     print("\n")
+
+for nom in graphes_PERT.keys():
+    graphe_ordonnancement = graphes_PERT[nom]
+    print("\n" + repr(graphe_ordonnancement))
+    for arc in graphe_ordonnancement.arcs():
+        print(f"arc : {arc}")
+        print(f"départ : {arc.depart()}")
+        print(f"arrivée : {arc.arrivee()}")
+        print(f"durée : {arc.valuation()}")
+        print()

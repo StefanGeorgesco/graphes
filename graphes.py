@@ -142,14 +142,20 @@ class Arc:
     def __repr__(self):
         return f"({self._depart},{self._arrivee},{self._valuation})"
 
-    def depart(self):
+    def depart(self) -> Sommet:
         return self._depart
 
-    def arrivee(self):
+    def arrivee(self) -> Sommet:
         return self._arrivee
 
-    def valuation(self):
+    def valuation(self) -> float:
         return self._valuation
+
+    def setDepart(self, depart: Sommet):
+        self._depart = depart
+
+    def setArrivee(self, arrivee: Sommet):
+        self._arrivee = arrivee
 
     def setValuation(self, valuation: float):
         self._valuation = valuation

@@ -1,13 +1,13 @@
 import unittest
-from graphesMPM_exemples import graphes_MPM, listes_taches
+from graphes_ordonnacement_exemples import graphes_MPM, listes_taches_MPM
 
 
-class TestsOrdonnancement(unittest.TestCase):
+class TestsOrdonnancementMPM(unittest.TestCase):
 
     def setUp(self) -> None:
         self.graphesMPM = {}
         for nom in graphes_MPM.keys():
-            self.graphesMPM.update({nom: (graphes_MPM[nom], listes_taches[nom])})
+            self.graphesMPM.update({nom: (graphes_MPM[nom], listes_taches_MPM[nom])})
 
     def test_calcul_dates_sans_contrainte_debut_a_debut(self):
         grapheMPM, taches = self.graphesMPM["RCP101 - ED3 - Exerice 2"]
@@ -94,3 +94,12 @@ class TestsOrdonnancement(unittest.TestCase):
         self.assertEqual(0.0, M.marge_libre())
         self.assertEqual(0.0, N.marge_libre())
         self.assertEqual(0.0, O.marge_libre())
+
+
+class TestsOrdonnancementPERT(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.graphesPERT = {}
+        for nom in graphe_MPM.keys():
+            self.graphesMPM.update({nom: (graphe_MPM[nom], listes_taches_MPM[nom])})
+
