@@ -181,11 +181,8 @@ class GraphePERT(GrapheOriente):
         self._simplifier()
         self._calculer_dates()
 
-    def evenements(self, deb_fin=True):
-        if deb_fin:
-            return self._evenements
-        else:
-            return self._evenements - {self._evenement_debut, self._evenement_fin}
+    def evenements(self):
+        return self._evenements
 
     def taches(self):
         return self._arcs
