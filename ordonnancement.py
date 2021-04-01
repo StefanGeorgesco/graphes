@@ -179,7 +179,7 @@ class GraphePERT(GrapheOriente):
         super().__init__(*liste_sommets, arcs=set(liste_taches), nom=nom, commentaire=commentaire)
         self._evenements = self._sommets
         self._simplifier()
-        self._calculer_dates()
+        # self._calculer_dates()
 
     def evenements(self):
         return self._evenements
@@ -207,7 +207,18 @@ class GraphePERT(GrapheOriente):
             self._evenements.discard(evenement)
 
     def _calculer_dates(self):
-        pass
+        pi, pere = self.bellman(self._evenement_debut, plus_long=True)
+        for evenement in self.evenements():
+            evenement.setPlus_tot(pi[evenement])
+        arcs = set()
+        for arc in self._arcs:
+            depart, arrivee = arc.depart(), arc.arrivee()
+            arcs.add(Arc(arrivee, depart, self.valuation(depart, arrivee)))
+        graphe = GrapheOriente(*self._sommets, arcs=arcs)
+        pi, _ = graphe.bellman(self._evenement_fin, plus_long=True)
+        date_de_fin = self._evenement_fin.plus_tot()
+        for evenement in self.evenements():
+            evenement.setPlus_tard(date_de_fin - pi[evenement])
 
 
 class GrapheMPM(GrapheOriente):
