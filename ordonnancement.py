@@ -79,6 +79,9 @@ class TachePERT(Tache, Arc):
     def __repr__(self):
         return self._nom + Tache.__repr__(self)
 
+    def nom(self):
+        return self._nom
+
     def duree(self) -> float:
         return self._valuation
 
@@ -101,60 +104,73 @@ class GraphePERT(GrapheOriente):
         liste_taches = list(taches)
         self._evenement_debut = EvenementPERT(".Début")
         self._evenement_fin = EvenementPERT(".Fin")
-        if prec is not None:
-            if not isinstance(prec, list):
-                raise Exception(f"{prec} doit être une liste")
-            if not all(
-                    map(
-                        lambda x: isinstance(x, tuple) and \
-                                  x[1] in taches and \
-                                  (len(x) == 2 and x[0] in taches or
-                                   len(x) == 3 and (x[0] is None or x[0] in taches) and
-                                   isinstance(x[2], float)),
-                        prec
-                    )
-            ):
-                raise Exception(f"Les éléments de {prec} doivent être du type \
+        if prec is None:
+            prec = []
+        if not isinstance(prec, list):
+            raise Exception(f"{prec} doit être une liste")
+        if not all(
+                map(
+                    lambda x: isinstance(x, tuple) and \
+                              x[1] in taches and \
+                              (len(x) == 2 and x[0] in taches or
+                               len(x) == 3 and (x[0] is None or x[0] in taches) and
+                               isinstance(x[2], float)),
+                    prec
+                )
+        ):
+            raise Exception(f"Les éléments de {prec} doivent être du type \
 (t1,t2) ou (t1,t2,durée), où t1,t2 sont dans {taches} et durée est un flottant")
-            for tache in taches:
-                taches_precedentes = [(x[0], x[2] if len(x) == 3 else 0.0) for x in prec if x[1] == tache]
-                if len(taches_precedentes) == 0:
-                    tache.setDepart(self._evenement_debut)
-                elif len(taches_precedentes) == 1:
-                    if taches_precedentes[0][0] is None:
+        for tache in taches:
+            taches_precedentes = [(x[0], x[2] if len(x) == 3 else 0.0) for x in prec if x[1] == tache]
+            tache_suivante = [x[1] for x in prec if x[0] is not None and x[0] == tache]
+            if len(taches_precedentes) == 0:
+                tache.setDepart(self._evenement_debut)
+            elif len(taches_precedentes) == 1:
+                if taches_precedentes[0][0] is None:
+                    tache_fictive = TachePERTFictive(duree=taches_precedentes[0][1])
+                    tache_fictive.arrivee().setNom("début " + tache.nom())
+                    tache_fictive.setDepart(self._evenement_debut)
+                    tache.setDepart(tache_fictive.arrivee())
+                    liste_taches.append(tache_fictive)
+                else:
+                    if taches_precedentes[0][1] > 0.0:
                         tache_fictive = TachePERTFictive(duree=taches_precedentes[0][1])
-                        tache_fictive.setDepart(self._evenement_debut)
+                        tache_fictive.arrivee().setNom("début " + tache.nom())
+                        tache_fictive.setDepart(taches_precedentes[0][0].depart())
                         tache.setDepart(tache_fictive.arrivee())
                         liste_taches.append(tache_fictive)
                     else:
-                        if taches_precedentes[0][1] > 0:
-                            tache_fictive = TachePERTFictive(duree=taches_precedentes[0][1])
-                            tache_fictive.setDepart(taches_precedentes[0][0].depart())
-                            tache.setDepart(tache_fictive.arrivee())
-                            liste_taches.append(tache_fictive)
-                        else:
-                            tache.setDepart(taches_precedentes[0][0].arrivee())
-                else:
-                    for t, d in taches_precedentes:
-                        tache_fictive = TachePERTFictive(duree=d)
+                        tache.setDepart(taches_precedentes[0][0].arrivee())
+                        tache.depart().setNom("début " + tache.nom())
+            else:
+                evenement_commun = None
+                for t, d in taches_precedentes:
+                    tache_fictive = TachePERTFictive(duree=d)
+                    if t is None:
+                        tache_fictive.setDepart(self._evenement_debut)
+                    else:
                         tache_fictive.setDepart(t.arrivee())
-                        tache.setDepart(tache_fictive.arrivee())
-                        liste_taches.append(tache_fictive)
-        for tache in set(taches) - set([x[0] for x in prec if x[0] is not None]):
-            tache_fictive = TachePERTFictive()
-            tache_fictive.setDepart(tache.arrivee())
-            tache_fictive.setArrivee(self._evenement_fin)
-            liste_taches.append(tache_fictive)
+                    if evenement_commun is None:
+                        evenement_commun = tache_fictive.arrivee()
+                        evenement_commun.setNom("début " + tache.nom())
+                    tache.setDepart(evenement_commun)
+                    tache_fictive.setArrivee(evenement_commun)
+                    liste_taches.append(tache_fictive)
+            if not tache_suivante:
+                tache_fictive = TachePERTFictive()
+                tache_fictive.setDepart(tache.arrivee())
+                tache_fictive.setArrivee(self._evenement_fin)
+                liste_taches.append(tache_fictive)
         liste_sommets = list(
             set(
                 map(
-                    lambda arc: arc.depart(),
+                    lambda tache: tache.depart(),
                     liste_taches
                 )
             ).union(
                 set(
                     map(
-                        lambda arc: arc.arrivee(),
+                        lambda tache: tache.arrivee(),
                         liste_taches
                     )
                 )
@@ -162,13 +178,20 @@ class GraphePERT(GrapheOriente):
         )
         super().__init__(*liste_sommets, arcs=set(liste_taches), nom=nom, commentaire=commentaire)
         self._evenements = self._sommets
-        # self._simplifier()
+        self._simplifier()
         self._calculer_dates()
 
-    def evenements(self):
-        return self._evenements
+    def evenements(self, deb_fin=True):
+        if deb_fin:
+            return self._evenements
+        else:
+            return self._evenements - {self._evenement_debut, self._evenement_fin}
+
+    def taches(self):
+        return self._arcs
 
     def _simplifier(self):
+        evenements_a_retirer = []
         for evenement in self._evenements:
             if len(self.successeurs(evenement)) == 1 and len(self.predecesseurs(evenement)) == 1:
                 predecesseur = list(self.predecesseurs(evenement))[0]
@@ -178,9 +201,13 @@ class GraphePERT(GrapheOriente):
                 if isinstance(arc_avant, TachePERTFictive) and arc_avant.duree() == 0:
                     arc_apres.setDepart(predecesseur)
                     self._arcs.discard(arc_avant)
+                    evenements_a_retirer.append(evenement)
                 elif isinstance(arc_apres, TachePERTFictive) and arc_apres.duree() == 0:
                     arc_avant.setArrivee(successeur)
                     self._arcs.discard(arc_apres)
+                    evenements_a_retirer.append(evenement)
+        for evenement in evenements_a_retirer:
+            self._evenements.discard(evenement)
 
     def _calculer_dates(self):
         pass

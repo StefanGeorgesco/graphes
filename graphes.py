@@ -11,6 +11,9 @@ class Sommet:
     def nom(self):
         return self._nom
 
+    def setNom(self, nom: str):
+        self._nom = nom
+
 
 class GrapheNonOriente:
     def __init__(self, *sommets, aretes=None, nom="", commentaire=""):

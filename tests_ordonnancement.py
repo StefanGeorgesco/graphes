@@ -1,5 +1,8 @@
 import unittest
-from graphes_ordonnacement_exemples import graphes_MPM, listes_taches_MPM
+from graphes_ordonnacement_exemples import graphes_MPM, \
+    listes_taches_MPM, \
+    graphes_PERT, \
+    listes_taches_PERT
 
 
 class TestsOrdonnancementMPM(unittest.TestCase):
@@ -100,6 +103,11 @@ class TestsOrdonnancementPERT(unittest.TestCase):
 
     def setUp(self) -> None:
         self.graphesPERT = {}
-        for nom in graphe_MPM.keys():
-            self.graphesMPM.update({nom: (graphe_MPM[nom], listes_taches_MPM[nom])})
+        for nom in graphes_PERT.keys():
+            self.graphesPERT.update({nom: (graphes_PERT[nom], listes_taches_PERT[nom])})
 
+    def test_nombre_taches_et_evenements(self):
+        graphePERT, taches = self.graphesPERT["RCP101 - ED3 - Exerice 3"]
+        A, B, C, D, E, F, G, H, I, J, K = taches
+        self.assertEqual(13, len(graphePERT.evenements()))
+        self.assertEqual(18, len(graphePERT.taches()))
