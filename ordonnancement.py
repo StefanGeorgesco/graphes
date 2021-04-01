@@ -149,7 +149,10 @@ class GraphePERT(GrapheOriente):
                     if t is None:
                         tache_fictive.setDepart(self._evenement_debut)
                     else:
-                        tache_fictive.setDepart(t.arrivee())
+                        if d > 0.0:
+                            tache_fictive.setDepart(t.depart())
+                        else:
+                            tache_fictive.setDepart(t.arrivee())
                     if evenement_commun is None:
                         evenement_commun = tache_fictive.arrivee()
                         evenement_commun.setNom("début " + tache.nom())
