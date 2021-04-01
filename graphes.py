@@ -360,14 +360,14 @@ class GrapheOriente:
             raise Exception("'sommet' doit être un sommet du graphe")
         if any(
                 map(
-                    lambda arc: arc.valuation() < 0,
+                    lambda arc: arc.valuation() < 0.0,
                     self._arcs
                 )
         ):
             raise Exception("Les valuations du graphe ne sont pas toutes positives")
         A = {r}
         pivot = r
-        pi = {r: 0}
+        pi = {r: 0.0}
         pere = {}
         n = self.ordre()
         sommets = self._sommets
@@ -416,7 +416,7 @@ class GrapheOriente:
             raise Exception("'sommet' n'est pas racine du graphe")
         f = max if plus_long else min
         A = {r}
-        pi = {r: 0}
+        pi = {r: 0.0}
         pere = {}
         n = self.ordre()
         for sommet in self._sommets - {r}:
@@ -442,7 +442,7 @@ class GrapheOriente:
         f = max if plus_long else min
         op = operator.__gt__ if plus_long else operator.__lt__
         limit = -float('inf') if plus_long else float('inf')
-        pi = {r: 0}
+        pi = {r: 0.0}
         pere = {}
         n = self.ordre()
         sommets = self._sommets
@@ -476,7 +476,7 @@ class GrapheOriente:
         f = max if plus_long else min
         limit = -float('inf') if plus_long else float('inf')
         k = 0
-        pi = {0: {r: 0}}
+        pi = {0: {r: 0.0}}
         pere = {}
         n = self.ordre()
         sommets = self._sommets
@@ -522,8 +522,8 @@ class GrapheOriente:
         for x in sommets:
             for y in sommets:
                 M[x, y] = self.valuation(x, y) if x != y and Arc(x, y) in self._arcs \
-                    else f(0, self.valuation(x, y)) if x == y and Arc(x, y) in self._arcs \
-                    else 0 if x == y and Arc(x, y) not in self._arcs \
+                    else f(0.0, self.valuation(x, y)) if x == y and Arc(x, y) in self._arcs \
+                    else 0.0 if x == y and Arc(x, y) not in self._arcs \
                     else limit
                 P[x, y] = x if x != y and Arc(x, y) in self._arcs else None
         for k in sommets:
@@ -532,7 +532,7 @@ class GrapheOriente:
                     if op(M[i, k] + M[k, j], M[i, j]):
                         M[i, j] = M[i, k] + M[k, j]
                         P[i, j] = P[k, j]
-                    if i == j and op(M[i, j], 0):
+                    if i == j and op(M[i, j], 0.0):
                         raise Exception(f"Il existe un circuit absorbant au niveau de {i}")
         return (M, P)
 

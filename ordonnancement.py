@@ -179,13 +179,21 @@ class GraphePERT(GrapheOriente):
         super().__init__(*liste_sommets, arcs=set(liste_taches), nom=nom, commentaire=commentaire)
         self._evenements = self._sommets
         self._simplifier()
-        # self._calculer_dates()
+        self._calculer_dates()
 
     def evenements(self):
         return self._evenements
 
-    def taches(self):
-        return self._arcs
+    def taches(self, fictives=True):
+        if fictives:
+            return self._arcs
+        else:
+            return set(
+                filter(
+                    lambda a: not isinstance(a, TachePERTFictive),
+                    self._arcs
+                )
+            )
 
     def _simplifier(self):
         evenements_a_retirer = []
@@ -195,16 +203,26 @@ class GraphePERT(GrapheOriente):
                 successeur = list(self.successeurs(evenement))[0]
                 arc_avant = self.arc(predecesseur, evenement)
                 arc_apres = self.arc(evenement, successeur)
-                if isinstance(arc_avant, TachePERTFictive) and arc_avant.duree() == 0:
+                if isinstance(arc_avant, TachePERTFictive) and arc_avant.duree() == 0.0:
+                    self._arcs.discard(arc_apres)
                     arc_apres.setDepart(predecesseur)
+                    self._arcs.add(arc_apres)
                     self._arcs.discard(arc_avant)
                     evenements_a_retirer.append(evenement)
-                elif isinstance(arc_apres, TachePERTFictive) and arc_apres.duree() == 0:
+                elif isinstance(arc_apres, TachePERTFictive) and arc_apres.duree() == 0.0:
+                    self._arcs.discard(arc_avant)
                     arc_avant.setArrivee(successeur)
+                    self._arcs.add(arc_avant)
                     self._arcs.discard(arc_apres)
                     evenements_a_retirer.append(evenement)
         for evenement in evenements_a_retirer:
             self._evenements.discard(evenement)
+
+    def evenement_debut(self) -> EvenementPERT:
+        return self._evenement_debut
+
+    def evenement_fin(self) -> EvenementPERT:
+        return self._evenement_fin
 
     def _calculer_dates(self):
         pi, pere = self.bellman(self._evenement_debut, plus_long=True)
@@ -219,6 +237,25 @@ class GraphePERT(GrapheOriente):
         date_de_fin = self._evenement_fin.plus_tot()
         for evenement in self.evenements():
             evenement.setPlus_tard(date_de_fin - pi[evenement])
+        for tache in self.taches():
+            tache.setPlus_tot(tache.depart().plus_tot())
+            tache.setPlus_tard(tache.arrivee().plus_tard() - tache.valuation())
+
+    def date_de_fin(self) -> float:
+        return self._evenement_fin.plus_tot()
+
+    def taches_critiques(self) -> list:
+        return sorted(
+            list(
+                set(
+                    filter(
+                        lambda tache: tache.marge_totale() == 0.0,
+                        self.taches(fictives=False)
+                    )
+                )
+            ),
+            key=TacheMPM.__repr__
+        )
 
 
 class GrapheMPM(GrapheOriente):
