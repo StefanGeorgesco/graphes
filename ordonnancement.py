@@ -127,7 +127,11 @@ class GraphePERT(GrapheOriente):
             taches_precedentes = [(x[0], x[2] if len(x) == 3 else 0.0) for x in prec if x[1] == tache]
             tache_suivante = [x[1] for x in prec if x[0] is not None and x[0] == tache]
             if len(taches_precedentes) == 0:
-                tache.setDepart(self._evenement_debut)
+                tache_fictive = TachePERTFictive()
+                tache_fictive.arrivee().setNom("début " + tache.nom())
+                tache_fictive.setDepart(self._evenement_debut)
+                tache.setDepart(tache_fictive.arrivee())
+                liste_taches.append(tache_fictive)
             elif len(taches_precedentes) == 1:
                 if taches_precedentes[0][0] is None:
                     tache_fictive = TachePERTFictive(duree=taches_precedentes[0][1])

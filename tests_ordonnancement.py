@@ -284,7 +284,7 @@ class TestsOrdonnancementPERT(unittest.TestCase):
         self.assertEqual(85.0, N.plus_tot())
         self.assertEqual(175.0, O.plus_tot())
         self.assertEqual(190.0, graphePERT.date_de_fin())
-        # self.assertEqual(0.0, A.plus_tard()) #calcule 5.0, devrait être 0.0
+        self.assertEqual(5.0, A.plus_tard()) # != MPM (0.0)
         self.assertEqual(30.0, B.plus_tard())
         self.assertEqual(20.0, C.plus_tard())
         self.assertEqual(65.0, D.plus_tard())
@@ -300,7 +300,7 @@ class TestsOrdonnancementPERT(unittest.TestCase):
         self.assertEqual(90.0, N.plus_tard())
         self.assertEqual(175.0, O.plus_tard())
         self.assertEqual(0.0, graphePERT.evenement_debut().plus_tard())
-        # self.assertEqual(0.0, A.marge_totale()) #calcule 5.0, devrait être 0.0
+        self.assertEqual(5.0, A.marge_totale())  # != MPM (0.0)
         self.assertEqual(30.0, B.marge_totale())
         self.assertEqual(0.0, C.marge_totale())
         self.assertEqual(15.0, D.marge_totale())
@@ -316,7 +316,7 @@ class TestsOrdonnancementPERT(unittest.TestCase):
         self.assertEqual(5.0, N.marge_totale())
         self.assertEqual(0.0, O.marge_totale())
         taches_critiques = graphePERT.taches_critiques()
-        # self.assertEqual({A, C, E, G, L, M, O}, set(taches_critiques)) #A n'est pas retenue, devrait
+        self.assertEqual({C, E, G, L, M, O}, set(taches_critiques))  # != MPM ({A, C, E, G, L, M, O})
         self.assertEqual(0.0, A.marge_libre())
         self.assertEqual(30.0, B.marge_libre())
         self.assertEqual(0.0, C.marge_libre())
