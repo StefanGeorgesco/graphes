@@ -93,8 +93,9 @@ class TachePERT(Tache, Arc):
         Tache.__init__(self, nom, duree)
         Arc.__init__(self, EvenementPERT("déb " + nom), EvenementPERT("fin " + nom), duree)
 
+
 class TachePERTFictive(TachePERT):
-    def __init__(self, nom : str='fictive', duree: float=0.0):
+    def __init__(self, nom: str = 'fictive', duree: float = 0.0):
         super().__init__(nom, duree)
 
 
@@ -244,7 +245,7 @@ class GraphePERT(GrapheOriente):
         return self._evenement_fin
 
     def _calculer_dates(self):
-        pi, pere = self.bellman(self._evenement_debut, plus_long=True)
+        pi, _ = self.bellman(self._evenement_debut, plus_long=True)
         for evenement in self.evenements():
             evenement.setPlus_tot(pi[evenement])
         arcs = set()
@@ -256,9 +257,29 @@ class GraphePERT(GrapheOriente):
         date_de_fin = self._evenement_fin.plus_tot()
         for evenement in self.evenements():
             evenement.setPlus_tard(date_de_fin - pi[evenement])
-        for tache in self.taches():
+        taches = self.taches()
+        for tache in taches:
             tache.setPlus_tot(tache.depart().plus_tot())
             tache.setPlus_tard(tache.arrivee().plus_tard() - tache.valuation())
+            taches_suivantes = list(
+                filter(
+                    lambda t: t.depart() == tache.arrivee(),
+                    taches
+                )
+            )
+            if taches_suivantes and \
+                    all(
+                        map(
+                            lambda t: isinstance(t, TachePERTFictive),
+                            taches_suivantes
+                        )
+                    ):
+                date_plus_tot = min(
+                    [t.arrivee().plus_tot() - t.valuation() for t in taches_suivantes]
+                )
+            else:
+                date_plus_tot = tache.arrivee().plus_tot()
+            tache.setMarge_libre(date_plus_tot - tache.depart().plus_tot() - tache.duree())
 
     def date_de_fin(self) -> float:
         return self._evenement_fin.plus_tot()
@@ -382,5 +403,3 @@ class GrapheMPM(GrapheOriente):
             ),
             key=TacheMPM.__repr__
         )
-
-
