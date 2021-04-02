@@ -2,13 +2,26 @@ from graphes import Sommet, Arc, GrapheOriente
 
 
 class Tache:
-    def __init__(self):
+    def __init__(self, nom: str, duree: float):
+        self._nom = nom
+        self._duree = duree
         self._plus_tot: float = 0.0
         self._plus_tard: float = 0.0
         self._marge_libre: float = 0.0
 
     def __repr__(self):
-        return f"({self.plus_tot()},{self.plus_tard()})"
+        return self._nom
+
+    def __str__(self):
+        return f"Tâche {self._nom} (durée : {self._duree}, \
+plus tôt : {self._plus_tot}, plus tard : {self._plus_tard}, \
+marge totale : {self.marge_totale()}, marge libre : {self._marge_libre})"
+
+    def nom(self) -> str:
+        return self._nom
+
+    def duree(self) -> float:
+        return self._duree
 
     def plus_tot(self) -> float:
         return self._plus_tot
@@ -18,6 +31,12 @@ class Tache:
 
     def marge_libre(self) -> float:
         return self._marge_libre
+
+    def setNom(self, nom: str) -> None:
+        self._nom = nom
+
+    def setDuree(self, duree: float) -> None:
+        self._duree = duree
 
     def setPlus_tot(self, plus_tot: float) -> None:
         self._plus_tot = plus_tot
@@ -34,21 +53,14 @@ class Tache:
 
 class TacheMPM(Tache, Sommet):
     def __init__(self, nom: str, duree: float):
-        Tache.__init__(self)
+        Tache.__init__(self, nom, duree)
         Sommet.__init__(self, nom)
-        self._duree: float = duree
 
     def __repr__(self):
-        return Sommet.__repr__(self) + Tache.__repr__(self)
+        return Tache.__repr__(self)
 
-    def nom(self):
-        return self._nom
-
-    def duree(self) -> float:
-        return self._duree
-
-    def setDuree(self, duree: float) -> None:
-        self._duree = duree
+    def __str__(self):
+        return Tache.__str__(self)
 
 
 class EvenementPERT(Sommet):
@@ -56,6 +68,12 @@ class EvenementPERT(Sommet):
         super().__init__(nom)
         self._plus_tot: float = 0.0
         self._plus_tard: float = 0.0
+
+    def __repr__(self):
+        return f"|{self._nom}|"
+
+    def __str__(self):
+        return f"Evénement {self._nom} (plus tôt : {self._plus_tot}, plus tard : {self._plus_tard})"
 
     def plus_tot(self) -> float:
         return self._plus_tot
@@ -72,28 +90,12 @@ class EvenementPERT(Sommet):
 
 class TachePERT(Tache, Arc):
     def __init__(self, nom: str, duree: float):
-        Tache.__init__(self)
-        Arc.__init__(self, EvenementPERT("début " + nom), EvenementPERT("fin " + nom), duree)
-        self._nom = nom
-
-    def __repr__(self):
-        return self._nom + Tache.__repr__(self)
-
-    def nom(self):
-        return self._nom
-
-    def duree(self) -> float:
-        return self._valuation
-
-    def setDuree(self, duree: float) -> None:
-        self.setValuation(duree)
+        Tache.__init__(self, nom, duree)
+        Arc.__init__(self, EvenementPERT("déb " + nom), EvenementPERT("fin " + nom), duree)
 
 class TachePERTFictive(TachePERT):
     def __init__(self, nom : str='fictive', duree: float=0.0):
         super().__init__(nom, duree)
-
-    def __repr__(self):
-        return f"{self._nom} {repr(self.depart())} {repr(self.arrivee())}"
 
 
 class GraphePERT(GrapheOriente):
@@ -184,6 +186,20 @@ class GraphePERT(GrapheOriente):
         self._simplifier()
         self._calculer_dates()
 
+    def __repr__(self):
+        return f"{self.__class__.__name__} {self._nom} \
+\n({sorted(list(self.evenements()), key=EvenementPERT.__repr__)}, \
+ \n{sorted(self.taches(), key=Tache.__repr__)})"
+
+    def __str__(self):
+        s = f"{self.__class__.__name__} {self._nom}\n\nTaches :\n"
+        for tache in sorted(list(self.taches()), key=Tache.__repr__):
+            s += f"\t{str(tache)}\n"
+        s += "\nEvénements :\n"
+        for ev in sorted(list(self.evenements()), key=EvenementPERT.__repr__):
+            s += f"\t{str(ev)}\n"
+        return s
+
     def evenements(self):
         return self._evenements
 
@@ -257,7 +273,7 @@ class GraphePERT(GrapheOriente):
                     )
                 )
             ),
-            key=TacheMPM.__repr__
+            key=Tache.__repr__
         )
 
 
@@ -308,9 +324,9 @@ class GrapheMPM(GrapheOriente):
 {sorted(self._arcs, key=Arc.__repr__)})"
 
     def __str__(self) -> str:
-        s = f"GrapheMPM {self._nom}\n\nTaches :\n"
-        for tache in sorted(list(self.taches()), key=TacheMPM.__repr__):
-            s += f"\t{tache}\n"
+        s = f"{self.__class__.__name__} {self._nom}\n\nTaches :\n"
+        for tache in sorted(list(self.taches()), key=Tache.__repr__):
+            s += f"\t{str(tache)}\n"
         s += "\nLiens :\n"
         for arc in self._arcs:
             s += f"\t{(arc.depart(), arc.arrivee(), arc.valuation())}\n"

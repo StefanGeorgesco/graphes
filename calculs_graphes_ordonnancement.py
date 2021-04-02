@@ -10,24 +10,24 @@ for nom in graphes_MPM.keys():
     print(f"\tDate de fin : {graphe_ordonnancement.date_de_fin()}\n")
     print(f"\tTâches critiques : {graphe_ordonnancement.taches_critiques()}\n\n")
     taches = sorted(graphe_ordonnancement.taches(deb_fin=False), key=TacheMPM.__repr__)
-    print("\t" + "".ljust(15), end="")
+    print("\t" + "".rjust(15), end="")
     for tache in taches:
-        print(tache.nom()[:4].ljust(5), end="")
+        print(tache.nom()[:7].rjust(8), end="")
     print("\n\t" + "durée".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.duree()).ljust(5), end="")
+        print(repr(tache.duree()).rjust(8), end="")
     print("\n\t" + "plus tôt".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.plus_tot()).ljust(5), end="")
+        print(repr(tache.plus_tot()).rjust(8), end="")
     print("\n\t" + "plus tard".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.plus_tard()).ljust(5), end="")
+        print(repr(tache.plus_tard()).rjust(8), end="")
     print("\n\t" + "marge libre".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.marge_libre()).ljust(5), end="")
+        print(repr(tache.marge_libre()).rjust(8), end="")
     print("\n\t" + "marge totale".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.marge_totale()).ljust(5), end="")
+        print(repr(tache.marge_totale()).rjust(8), end="")
     print("\n")
 
 print("\nCalcul par la méthode PERT :")
@@ -39,22 +39,22 @@ for nom in graphes_PERT.keys():
     print(f"\tDate de fin : {graphe_ordonnancement.date_de_fin()}\n")
     print(f"\tTâches critiques : {graphe_ordonnancement.taches_critiques()}\n\n")
     taches = sorted(graphe_ordonnancement.taches(fictives=False), key=TachePERT.__repr__)
-    print("\t" + "".ljust(15), end="")
+    print("\t" + "".rjust(15), end="")
     for tache in taches:
-        print(tache.nom()[:4].ljust(5), end="")
+        print(tache.nom()[:7].rjust(8), end="")
     print("\n\t" + "durée".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.duree()).ljust(5), end="")
+        print(repr(tache.duree()).rjust(8), end="")
     print("\n\t" + "plus tôt".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.plus_tot()).ljust(5), end="")
+        print(repr(tache.plus_tot()).rjust(8), end="")
     print("\n\t" + "plus tard".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.plus_tard()).ljust(5), end="")
+        print(repr(tache.plus_tard()).rjust(8), end="")
     print("\n\t" + "marge libre".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.marge_libre()).ljust(5), end="")
+        print(repr(tache.marge_libre()).rjust(8), end="")
     print("\n\t" + "marge totale".ljust(15), end="")
     for tache in taches:
-        print(repr(tache.marge_totale()).ljust(5), end="")
+        print(repr(tache.marge_totale()).rjust(8), end="")
     print("\n")
