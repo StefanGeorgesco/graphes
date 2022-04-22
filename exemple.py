@@ -30,11 +30,13 @@ print("graphe :\n", graphe)
 print("pi :", pi)
 print("pere :", pere)
 
+
 def chemin(s1, s2):
     if s1 == s2:
         return []
     else:
         return chemin(s1, pere[s2]) + [(pere[s2], s2)]
+
 
 print(f"chemin de {S1} à {S2} : {chemin(S1, S2)}")
 print(f"longueur du chemin de {S1} à {S2} : {pi[S2]}")

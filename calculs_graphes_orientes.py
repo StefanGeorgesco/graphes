@@ -35,16 +35,16 @@ if __name__ == '__main__':
         """
 
 
-        def afficheMatrice(sommets, M):
-            M = dict(M)
+        def afficheMatrice(listeSommets, matrice):
+            matrice = dict(matrice)
             print("\t" + "".ljust(5), end="")
-            for j in sommets:
+            for j in listeSommets:
                 print(repr(j).ljust(5), end="")
             print()
-            for i in sommets:
+            for i in listeSommets:
                 print("\t" + repr(i).ljust(5), end="")
-                for j in sommets:
-                    print(repr(M[i, j]).ljust(5), end="")
+                for j in listeSommets:
+                    print(repr(matrice[i, j]).ljust(5), end="")
                 print()
             print()
 

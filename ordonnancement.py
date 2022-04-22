@@ -113,11 +113,11 @@ class GraphePERT(GrapheOriente):
             raise Exception(f"{prec} doit être une liste")
         if not all(
                 map(
-                    lambda x: isinstance(x, tuple) and \
-                              x[1] in taches and \
-                              (len(x) == 2 and x[0] in taches or
-                               len(x) == 3 and (x[0] is None or x[0] in taches) and
-                               isinstance(x[2], float)),
+                    lambda x: isinstance(x, tuple) and
+                    x[1] in taches and
+                    (len(x) == 2 and x[0] in taches or
+                        len(x) == 3 and (x[0] is None or x[0] in taches) and
+                        isinstance(x[2], float)),
                     prec
                 )
         ):
@@ -174,13 +174,13 @@ class GraphePERT(GrapheOriente):
         liste_sommets = list(
             set(
                 map(
-                    lambda tache: tache.depart(),
+                    lambda ta: ta.depart(),
                     liste_taches
                 )
             ).union(
                 set(
                     map(
-                        lambda tache: tache.arrivee(),
+                        lambda ta: ta.arrivee(),
                         liste_taches
                     )
                 )
@@ -318,11 +318,11 @@ class GrapheMPM(GrapheOriente):
                 raise Exception(f"{prec} doit être une liste")
             if not all(
                     map(
-                        lambda x: isinstance(x, tuple) and \
-                                  x[1] in taches and \
-                                  (len(x) == 2 and x[0] in taches or
-                                   len(x) == 3 and (x[0] in taches or x[0] is None) and
-                                   isinstance(x[2], float)),
+                        lambda c: isinstance(c, tuple) and
+                        c[1] in taches and
+                        (len(c) == 2 and c[0] in taches or
+                            len(c) == 3 and (c[0] in taches or c[0] is None) and
+                            isinstance(c[2], float)),
                         prec
                     )
             ):
@@ -337,9 +337,9 @@ class GrapheMPM(GrapheOriente):
                     if t1 is None:
                         t1 = self._tache_debut
                     arcs.add(Arc(t1, t2, d))
-        for tache in set(taches) - set(map(lambda x: x[1], prec)):
+        for tache in set(taches) - set(map(lambda c: c[1], prec)):
             arcs.add(Arc(self._tache_debut, tache, 0.0))
-        for tache in set(taches) - set(map(lambda x: x[0], prec)):
+        for tache in set(taches) - set(map(lambda c: c[0], prec)):
             arcs.add(Arc(tache, self._tache_fin, tache.duree()))
         super().__init__(*liste_taches, arcs=arcs, nom=nom, commentaire=commentaire)
         self._calculer_dates()

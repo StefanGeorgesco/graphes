@@ -162,7 +162,6 @@ class TestsGraphesOrientes(unittest.TestCase):
     def test_arcs(self):
         s1 = Sommet("1")
         s2 = Sommet("2")
-        s3 = Sommet("3")
         s4 = Sommet("4")
         s5 = Sommet("5")
         a1 = Arc(s1, s2)
@@ -202,7 +201,10 @@ class TestsGraphesOrientes(unittest.TestCase):
         s5 = Sommet("5")
         graphe1 = GrapheOriente(
             s1, s2, s3, s4, s5,
-            arcs={Arc(s1, s2, 2.0), Arc(s1, s3, 5.0), Arc(s2, s4, -1.0), Arc(s4, s2, 1.0), Arc(s4, s5, 1.0), Arc(s5, s1, -3.0)}
+            arcs={
+                Arc(s1, s2, 2.0), Arc(s1, s3, 5.0), Arc(s2, s4, -1.0), Arc(s4, s2, 1.0), Arc(s4, s5, 1.0),
+                Arc(s5, s1, -3.0)
+            }
         )
         arcs = graphe1.arcs()
         self.assertEqual(6, len(arcs))
@@ -229,7 +231,7 @@ class TestsGraphesOrientes(unittest.TestCase):
         self.assertEqual({2.0, 5.0, -1.0, 1.0, -3.0}, valuations)
         graphe3, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), pages 25/27/33"]
         s1, s2, s5, s6, s8, s9, s18, s19 = sommets[0], sommets[1], sommets[4], sommets[5], \
-                                           sommets[7], sommets[8], sommets[17], sommets[18]
+            sommets[7], sommets[8], sommets[17], sommets[18]
         arcs = graphe3.arcs()
         self.assertEqual(40, len(arcs))
         self.assertTrue(Arc(s1, s2) in arcs)
@@ -294,7 +296,7 @@ class TestsGraphesOrientes(unittest.TestCase):
 
     def test_copie_graphe_oriente(self):
         graphe, sommets = self.graphesOrientes["'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 92"]
-        A, B, C, D, E, F = sommets
+        _, B, C, D, E, F = sommets
         graphe.setNom("nom")
         graphe_copie = graphe.copie()
         self.assertEqual("Copie de nom", graphe_copie.nom())

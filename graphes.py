@@ -17,6 +17,8 @@ class Sommet:
 
 class GrapheNonOriente:
     def __init__(self, *sommets, aretes=None, nom="", commentaire=""):
+        self._commentaire = None
+        self._nom = None
         for sommet in sommets:
             if not isinstance(sommet, Sommet):
                 raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
@@ -166,6 +168,8 @@ class Arc:
 
 class GrapheOriente:
     def __init__(self, *sommets, arcs=None, nom="", commentaire=""):
+        self._commentaire = None
+        self._nom = None
         for sommet in sommets:
             if not isinstance(sommet, Sommet):
                 raise Exception(f"Les sommets doivent appartenir au type '{Sommet.__name__}'")
@@ -177,9 +181,7 @@ class GrapheOriente:
                 raise Exception("Le paramètre 'arcs' doit être un 'set'.")
             if not all(
                     map(
-                        lambda arc: isinstance(arc, Arc) and \
-                                    arc.depart() in sommets and \
-                                    arc.arrivee() in sommets,
+                        lambda arc: isinstance(arc, Arc) and arc.depart() in sommets and arc.arrivee() in sommets,
                         list(arcs)
                     )
             ):
@@ -534,7 +536,7 @@ class GrapheOriente:
                         P[i, j] = P[k, j]
                     if i == j and op(M[i, j], 0.0):
                         raise Exception(f"Il existe un circuit absorbant au niveau de {i}")
-        return (M, P)
+        return M, P
 
     def chemin_optimal(self, sommet1, sommet2, plus_long=False):
         M, P = self.floyd_warshall(plus_long)

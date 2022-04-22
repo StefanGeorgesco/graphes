@@ -1,17 +1,21 @@
 from graphes_exemples import graphes_orientes, listes_sommets_graphes_orientes
 
+
 def get_graphes_orientes(nom):
     return graphes_orientes[nom], listes_sommets_graphes_orientes[nom]
 
-def chemin(pere, s1, s2):
-    if s1 == s2:
-        return []
-    return chemin(pere, s1, pere[s2]) + [(pere[s2], s2)]
 
-def chemin2(P, s1, s2):
-    if s1 == s2:
+def chemin(pere, sommet1, sommet2):
+    if sommet1 == sommet2:
         return []
-    return chemin2(P, s1, P[s1, s2]) + [(P[s1, s2], s2)]
+    return chemin(pere, sommet1, pere[sommet2]) + [(pere[sommet2], sommet2)]
+
+
+def chemin2(P, sommet1, sommet2):
+    if sommet1 == sommet2:
+        return []
+    return chemin2(P, sommet1, P[sommet1, sommet2]) + [(P[sommet1, sommet2], sommet2)]
+
 
 def afficheMatrice(sommets, M):
     M = dict(M)
@@ -25,6 +29,7 @@ def afficheMatrice(sommets, M):
             print(repr(M[i, j]).ljust(5), end="")
         print()
     print()
+
 
 graphe, sommets = get_graphes_orientes("RCP101 - ED2 - Exercice 1")
 print(graphe.getCommentaire())
