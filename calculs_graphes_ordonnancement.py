@@ -1,4 +1,4 @@
-from ordonnancement import Tache, TacheMPM, TachePERT
+from ordonnancement import TacheMPM, TachePERT
 from graphes_ordonnacement_exemples import graphes_MPM, graphes_PERT
 
 print("\nCalcul par la méthode MPM :")

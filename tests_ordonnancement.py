@@ -198,24 +198,24 @@ class TestsOrdonnancementPERT(unittest.TestCase):
         self.assertEqual(13, len(graphePERT.evenements()))
         self.assertEqual(18, len(graphePERT.taches()))
         couples = [
-            (Edebut, E1), #4.0
-            (Edebut, E2), #2.0
-            (Edebut, E5), #6.0
-            (E1, E3), #6.0
-            (E2, E4), #2.0
-            (E4, E6), #4.0
-            (E3, E6), #0.0
-            (E3, E7), #1.0
-            (E3, E5), #0.0
-            (E5, E7), #3.0
-            (E6, E8), #6.0
-            (E7, E9), #5.0
-            (E8, E10), #0.0
-            (E8, E11), #0.0
-            (E9, E10), #0.0
-            (E9, E11), #0.0
-            (E10, Efin), #3.0
-            (E11, Efin) #4.0
+            (Edebut, E1),  # 4.0
+            (Edebut, E2),  # 2.0
+            (Edebut, E5),  # 6.0
+            (E1, E3),  # 6.0
+            (E2, E4),  # 2.0
+            (E4, E6),  # 4.0
+            (E3, E6),  # 0.0
+            (E3, E7),  # 1.0
+            (E3, E5),  # 0.0
+            (E5, E7),  # 3.0
+            (E6, E8),  # 6.0
+            (E7, E9),  # 5.0
+            (E8, E10),  # 0.0
+            (E8, E11),  # 0.0
+            (E9, E10),  # 0.0
+            (E9, E11),  # 0.0
+            (E10, Efin),  # 3.0
+            (E11, Efin)  # 4.0
         ]
         arcs = [Arc(*x) for x in couples]
         present = list(
@@ -226,11 +226,12 @@ class TestsOrdonnancementPERT(unittest.TestCase):
         )
         valuations = [graphePERT.valuation(*x) for x in couples]
         self.assertTrue(all(present))
-        self.assertEqual([4.0, 2.0, 6.0, 6.0, 2.0, 4.0, 0.0, 1.0, 0.0, 3.0, 6.0, 5.0, 0.0, 0.0, 0.0, 0.0, 3.0, 4.0], valuations)
+        self.assertEqual([4.0, 2.0, 6.0, 6.0, 2.0, 4.0, 0.0, 1.0, 0.0, 3.0, 6.0, 5.0, 0.0, 0.0, 0.0, 0.0, 3.0, 4.0],
+                         valuations)
         num = graphePERT.numerotation_topolgique()
         self.assertEqual(1, num[Edebut])
         self.assertEqual(13, num[Efin])
-        
+
     def test_calcul_dates_sans_contrainte_debut_a_debut(self):
         graphePERT, taches = self.graphesPERT["RCP101 - ED3 - Exerice 2"]
         A, B, C, D, E, F = taches
@@ -284,7 +285,7 @@ class TestsOrdonnancementPERT(unittest.TestCase):
         self.assertEqual(85.0, N.plus_tot())
         self.assertEqual(175.0, O.plus_tot())
         self.assertEqual(190.0, graphePERT.date_de_fin())
-        self.assertEqual(5.0, A.plus_tard()) # != MPM (0.0)
+        self.assertEqual(5.0, A.plus_tard())  # != MPM (0.0)
         self.assertEqual(30.0, B.plus_tard())
         self.assertEqual(20.0, C.plus_tard())
         self.assertEqual(65.0, D.plus_tard())
@@ -385,4 +386,3 @@ class TestsOrdonnancementPERT(unittest.TestCase):
         self.assertEqual(2.0, I.marge_libre())
         self.assertEqual(1.0, J.marge_libre())
         self.assertEqual(0.0, K.marge_libre())
-

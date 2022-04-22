@@ -108,7 +108,8 @@ donnees_graphes_orientes = [
         "sommet_départ": "A"
     },
     {
-        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 112 - Méthode MPM - Dates au plus tôt et chemin critique",
+        "nom": "'RCP101_Partie1_Graphes_et_Algorithmes' (RCP101), page 112 - Méthode MPM - Dates au plus tôt et "
+               "chemin critique",
         "noms_sommets": ["début", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "fin"],
         "liens": [
             ("début", "a", 0),
